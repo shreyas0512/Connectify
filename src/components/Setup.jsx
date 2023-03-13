@@ -11,6 +11,7 @@ const Setup = () => {
   const [uid, setUid] = useState("");
   const [file, setFile] = useState(null);
   const [imgUploaded, setImgUploaded] = useState(false);
+  let navigate = useNavigate();
 
   useEffect(() => {
     setName(localStorage.getItem("name"));
@@ -44,6 +45,8 @@ const Setup = () => {
           uid: uid,
           imgurl: url,
         });
+        const path = `/profile/${uid}`;
+        navigate(path);
       });
   };
   return (
