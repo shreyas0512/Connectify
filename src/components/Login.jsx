@@ -15,10 +15,7 @@ function Login() {
   const [ud, setUd] = useState("");
   const [error, setError] = useState("");
   let navigate = useNavigate();
-  const routeChange = () => {
-    let path = "/setup";
-    navigate(path);
-  };
+
   function setLocalStorage() {
     localStorage.setItem("name", name);
     localStorage.setItem("email", email);
@@ -62,7 +59,10 @@ function Login() {
         const uid1 = user.uid;
         console.log(uid1);
         setUd(uid1);
+        localStorage.setItem("uid", uid1);
         setLocalStorage();
+        let path = `/profile/${uid1}`;
+        navigate(path);
       })
       .catch((error) => {
         const errorCode = error.code;

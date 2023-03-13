@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import logout from "../assets/logout.png";
+import { signOut } from "firebase/auth";
 
 const Profile = () => {
-  const name = localStorage.getItem("name");
+  const [name, setName] = useState("");
   const { abc } = useParams();
   const uid = abc;
   const [profpic, setProfpic] = useState("");
@@ -19,6 +21,7 @@ const Profile = () => {
     const docSnap = await getDoc(picRef);
     if (docSnap.exists()) {
       setProfpic(docSnap.data().imgurl);
+      setName(docSnap.data().name);
     } else {
       console.log("No such document!");
     }
@@ -48,14 +51,16 @@ const Profile = () => {
           className="w-72 h-12 rounded-md bg-white shadow-md m-8 ml-4 font-medium pl-2 focus:outline-none resize-none "
           placeholder="Search for Users"
         />
-
-        <div className="bg-green pr-2 h-12 mt-4 mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">
-          <img
-            src={profpic}
-            alt="a"
-            className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer"
-          />
-          Hi, {name}
+        <div className="flex mt-4">
+          <div className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">
+            <img
+              src={profpic}
+              alt="a"
+              className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer"
+            />
+            Hi, {name}
+          </div>
+          <img src={logout} className="h-8 w-8 mt-2 mr-2 cursor-pointer" />
         </div>
       </div>
       <div className="flex flex-row justify-between">
