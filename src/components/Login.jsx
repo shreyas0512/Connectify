@@ -19,6 +19,7 @@ function Login() {
   function setLocalStorage() {
     localStorage.setItem("name", name);
     localStorage.setItem("email", email);
+    localStorage.setItem("phone", phone);
   }
 
   useEffect(() => {

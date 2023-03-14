@@ -40,10 +40,15 @@ const Setup = () => {
         const userRef = doc(collection(db, "users"), uid);
         setDoc(userRef, {
           name: name,
+          email: localStorage.getItem("email"),
+          phone: localStorage.getItem("phone"),
           about: about,
           interests: interests,
           uid: uid,
           imgurl: url,
+          friends: [],
+          received: [],
+          sent: [],
         });
         const path = `/profile/${uid}`;
         navigate(path);
