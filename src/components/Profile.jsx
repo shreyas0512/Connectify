@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Mutuals from "./Mutuals";
+import Requests from "./Requests";
 import {
   doc,
   getDoc,
@@ -164,7 +165,6 @@ const Profile = () => {
       //console.log(doc.id, " => ", doc.data());
     });
     setMutualusers(newmut);
-
   }
 
   //fetch mutual users data
@@ -199,8 +199,8 @@ const Profile = () => {
   }, [uid]);
 
   return (
-    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col">
-      <div className="flex flex-row justify-between">
+    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
+      <div className="flex flex-row ">
         <input
           className="w-72 h-12 rounded-md bg-white shadow-md m-8 ml-4 font-medium pl-2 focus:outline-none resize-none "
           placeholder="Search for Users"
@@ -209,7 +209,8 @@ const Profile = () => {
             setSearcher(e.target.value);
           }}
         />
-        <div className="flex mt-4">
+        <Requests />
+        <div className="flex mt-4 ml-[4rem]">
           <div className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">
             <img
               src={userprofpic}
@@ -218,6 +219,7 @@ const Profile = () => {
             />
             Hi, {userName}
           </div>
+
           <img
             src={logout}
             className="h-8 w-8 mt-2 mr-2 cursor-pointer"
@@ -237,7 +239,7 @@ const Profile = () => {
           />
         </div>
       </div>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row space-x-12">
         <div className="flex flex-col">
           <div className="bg-white p-12 m-4 mt-28 shadow-md rounded-lg flex flex-col w-[52rem]">
             <div className="flex">

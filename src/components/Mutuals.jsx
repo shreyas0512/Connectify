@@ -9,10 +9,15 @@ const Mutuals = (props) => {
   console.log(props.users);
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col">
       <div>
         {props.users.map((user) => {
-          return <Mutualuser users={user} />;
+          return (
+            <div>
+              <Mutualuser users={user} />
+              <div className="bg-gray-200 h-[2px] m-3 -mt-1 shadow-md "></div>
+            </div>
+          );
         })}
       </div>
     </div>
