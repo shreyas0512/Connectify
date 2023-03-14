@@ -94,9 +94,9 @@ const Profile = () => {
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       console.log("Document data:", docSnap.data());
-      const friends = docSnap.data().friends;
-      friends.push(uid);
-      await updateDoc(userRef, { friends: friends });
+      const sent = docSnap.data().sent;
+      sent.push(uid);
+      await updateDoc(userRef, { sent: sent });
     } else {
       console.log("couldnt send request");
     }
