@@ -2,8 +2,10 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 import { collection, setDoc, addDoc, doc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { auth } from "../firebase";
 const Setup = () => {
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
@@ -19,7 +21,7 @@ const Setup = () => {
 
   useEffect(() => {
     setName(localStorage.getItem("name"));
-    setUid(localStorage.getItem("uid"));
+    //setUid(localStorage.getItem("uid"));
   }, []);
   function handleImg(e) {
     e.preventDefault();
@@ -28,6 +30,17 @@ const Setup = () => {
     setImgUploaded(true);
     setFile(file);
   }
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user.uid + " is the user");
+        console.log("user is signed in");
+        setUid(user.uid);
+      }
+    });
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const storage = getStorage();

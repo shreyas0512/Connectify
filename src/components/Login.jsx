@@ -23,7 +23,7 @@ function Login() {
   }
 
   useEffect(() => {
-    localStorage.setItem("uid", ud);
+    // localStorage.setItem("uid", ud);
   }, [ud]);
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -35,8 +35,7 @@ function Login() {
         const uid1 = user.uid;
         console.log(uid1);
         setUd(uid1);
-        localStorage.setItem("uid", uid1);
-        setLocalStorage();
+        //localStorage.setItem("uid", uid1);
 
         let path = "/setup";
         navigate(path);
@@ -60,7 +59,7 @@ function Login() {
         const uid1 = user.uid;
         console.log(uid1);
         setUd(uid1);
-        localStorage.setItem("uid", uid1);
+        //localStorage.setItem("uid", uid1);
         setLocalStorage();
         let path = `/profile/${uid1}`;
         navigate(path);

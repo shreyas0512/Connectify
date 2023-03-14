@@ -15,8 +15,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import logout from "../assets/logout.png";
-import { signOut } from "firebase/auth";
-
+import { onAuthStateChanged, signOut } from "firebase/auth";
 //main function
 
 const Profile = () => {
@@ -26,7 +25,8 @@ const Profile = () => {
   const uid = abc;
   console.log(uid + "abc");
   const [profpic, setProfpic] = useState("");
-  const userid = localStorage.getItem("uid");
+  const [userid, setUserid] = useState("");
+
   const [isUser, setIsUser] = useState(false);
   const interestRef = doc(db, "users", uid);
   const [about, setAbout] = useState("");
@@ -42,6 +42,19 @@ const Profile = () => {
   const navigate = useNavigate();
   const aboutRef = doc(db, "users", uid);
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log(user.uid + " is the user");
+        console.log("user is signed in");
+        setUserid(user.uid);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(userid + "is being changed yay");
+  }, [userid]);
   //function to get user data using local storage uid
 
   async function getuserdata() {
@@ -185,7 +198,7 @@ const Profile = () => {
     if (uid) {
       getPic();
     }
-  }, [uid]);
+  }, [uid, userid]);
 
   useEffect(() => {
     if (uid === userid) {
@@ -196,7 +209,13 @@ const Profile = () => {
   useEffect(() => {
     checkRequest();
     mutuals();
-  }, [uid]);
+  }, [uid, userid]);
+
+  useEffect(() => {
+    if (userid) {
+      console.log("id cahged");
+    }
+  }, [userid]);
 
   return (
     <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
