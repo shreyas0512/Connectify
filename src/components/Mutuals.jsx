@@ -1,14 +1,19 @@
 import React from "react";
-
+import { useEffect } from "react";
+import Mutualuser from "./Mutualuser";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 const Mutuals = (props) => {
+  const [mutusers, setMutusers] = React.useState([]);
+
+  console.log(props.users);
+
   return (
     <div className="flex flex-row">
-      <img src="{profpic}" alt="" className="h-10 w-10 rounded-md ml-8" />
-      <div className="flex flex-col ml-4">
-        <div className="text-xl font-bold text-green">John Doe</div>
-        <div className="text-sm font-light text-gray-700">
-          14 Mutual Friends
-        </div>
+      <div>
+        {props.users.map((user) => {
+          return <Mutualuser users={user} />;
+        })}
       </div>
     </div>
   );

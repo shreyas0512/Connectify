@@ -35,6 +35,7 @@ const Profile = () => {
   const [userprofpic, setuserprofpic] = useState("");
   const [pending, setPending] = useState(false);
   const [friends, setFriends] = useState(false);
+  const [mutualusers, setMutualusers] = useState([]);
 
   const [mutualcount, setMutualcount] = useState("");
   const navigate = useNavigate();
@@ -154,11 +155,25 @@ const Profile = () => {
     const userfriends = docSnap.data().friends;
     const profriends = profSnap.data().friends;
     const mutual = userfriends.filter((uid) => profriends.includes(uid));
-    console.log(mutual.length + "mutual friends");
     setMutualcount(mutual.length);
+    const q = query(collection(db, "users"), where("uid", "in", mutual));
+    const querySnapshot = await getDocs(q);
+    const newmut = [];
+    querySnapshot.forEach((doc) => {
+      newmut.push(doc.data());
+      //console.log(doc.id, " => ", doc.data());
+    });
+    setMutualusers(newmut);
+
   }
 
+  //fetch mutual users data
+
   //use effects to call functions on page load and on change of state
+
+  useEffect(() => {
+    console.log(mutualusers);
+  }, [mutualusers]);
 
   useEffect(() => {
     if (searcher) search();
@@ -302,7 +317,7 @@ const Profile = () => {
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               Mutuals
             </div>
-            <Mutuals  />
+            <Mutuals users={mutualusers} />
           </div>
         )}
       </div>
