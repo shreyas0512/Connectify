@@ -11,6 +11,10 @@ const Setup = () => {
   const [uid, setUid] = useState("");
   const [file, setFile] = useState(null);
   const [imgUploaded, setImgUploaded] = useState(false);
+  var received = {
+    uid: "",
+    read: false,
+  };
   let navigate = useNavigate();
 
   useEffect(() => {

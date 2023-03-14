@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Mutuals from "./Mutuals";
 import {
   doc,
   getDoc,
@@ -32,6 +33,10 @@ const Profile = () => {
   const [searcher, setSearcher] = useState("");
   const [userName, setuserName] = useState("");
   const [userprofpic, setuserprofpic] = useState("");
+  const [pending, setPending] = useState(false);
+  const [friends, setFriends] = useState(false);
+
+  const [mutualcount, setMutualcount] = useState("");
   const navigate = useNavigate();
   const aboutRef = doc(db, "users", uid);
 
@@ -102,13 +107,55 @@ const Profile = () => {
     }
     //to add connection request received in other end and store received as an array
     if (profSnap.exists()) {
+      var rec = {
+        uid: userid,
+        read: false,
+      };
       const received = profSnap.data().received;
-      console.log(userid + " id prob");
-      received.push(userid);
+      console.log(rec);
+      received.push(rec);
       await updateDoc(profRef, { received: received });
     } else {
       console.log("couldnt add receive notification");
     }
+
+    checkRequest();
+  }
+
+  //function to check if request already sent
+
+  async function checkRequest() {
+    setPending(false);
+    console.log("check request");
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const sent = docSnap.data().sent;
+      if (sent.includes(uid)) {
+        setPending(true);
+        console.log("request already sent");
+      } else {
+        console.log("request sent");
+      }
+    } else {
+      console.log("couldnt send request");
+    }
+  }
+
+  //function to compute mutual friends and show count
+  async function mutuals() {
+    console.log("Mutuals");
+    const userRef = doc(db, "users", userid);
+    const profRef = doc(db, "users", uid);
+
+    const docSnap = await getDoc(userRef);
+    const profSnap = await getDoc(profRef);
+
+    const userfriends = docSnap.data().friends;
+    const profriends = profSnap.data().friends;
+    const mutual = userfriends.filter((uid) => profriends.includes(uid));
+    console.log(mutual.length + "mutual friends");
+    setMutualcount(mutual.length);
   }
 
   //use effects to call functions on page load and on change of state
@@ -130,6 +177,11 @@ const Profile = () => {
       setIsUser(true);
     } else setIsUser(false);
   }, [uid, userid]);
+
+  useEffect(() => {
+    checkRequest();
+    mutuals();
+  }, [uid]);
 
   return (
     <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col">
@@ -187,6 +239,13 @@ const Profile = () => {
                   <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
                     Edit Profile
                   </div>
+                ) : pending ? (
+                  <div
+                    className=" w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-black cursor-default"
+                    onClick={addConnection}
+                  >
+                    Request Sent
+                  </div>
                 ) : (
                   <div
                     className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
@@ -198,9 +257,13 @@ const Profile = () => {
               </div>
             </div>
             <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
-            <div className="text-xl text-[#929191] -ml-8">
-              14 Mutual Friends
-            </div>
+            {isUser ? (
+              ""
+            ) : (
+              <div className="text-xl text-[#929191] -ml-8">
+                {mutualcount} Mutual Friends
+              </div>
+            )}
             <div className="-ml-8 text-2xl font-medium mt-2">About</div>
             <div className="-ml-8 text-lg font-light text-gray-700 w-[52rem]">
               {about}
@@ -239,15 +302,7 @@ const Profile = () => {
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               Mutuals
             </div>
-            <div className="flex flex-row">
-              <img src={profpic} alt="" className="h-10 w-10 rounded-md ml-8" />
-              <div className="flex flex-col ml-4">
-                <div className="text-xl font-bold text-green">John Doe</div>
-                <div className="text-sm font-light text-gray-700">
-                  14 Mutual Friends
-                </div>
-              </div>
-            </div>
+            <Mutuals  />
           </div>
         )}
       </div>
