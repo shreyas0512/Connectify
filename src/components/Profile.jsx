@@ -26,7 +26,7 @@ const Profile = () => {
   console.log(uid + "abc");
   const [profpic, setProfpic] = useState("");
   const [userid, setUserid] = useState("");
-
+  const [visible, setVisible] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const interestRef = doc(db, "users", uid);
   const [about, setAbout] = useState("");
@@ -157,6 +157,10 @@ const Profile = () => {
     }
   }
 
+  const reqVisible = () => {
+    setVisible(!visible);
+  };
+
   //function to compute mutual friends and show count
   async function mutuals() {
     console.log("Mutuals");
@@ -218,7 +222,10 @@ const Profile = () => {
   }, [userid]);
 
   return (
-    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
+    <div
+      className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
+      onClick={reqVisible}
+    >
       <div className="flex flex-row ">
         <input
           className="w-72 h-12 rounded-md bg-white shadow-md m-8 ml-4 font-medium pl-2 focus:outline-none resize-none "
@@ -228,7 +235,9 @@ const Profile = () => {
             setSearcher(e.target.value);
           }}
         />
-        <Requests />
+        <div className="h-[11rem]">
+          <Requests visible={visible} />
+        </div>
         <div className="flex mt-4 ml-[4rem]">
           <div className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">
             <img
@@ -260,7 +269,7 @@ const Profile = () => {
       </div>
       <div className="flex flex-row space-x-12">
         <div className="flex flex-col">
-          <div className="bg-white p-12 m-4 mt-28 shadow-md rounded-lg flex flex-col w-[52rem]">
+          <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
             <div className="flex">
               <img
                 src={profpic}
@@ -334,7 +343,7 @@ const Profile = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white shadow-md mt-28 mr-4 rounded-md flex flex-col">
+          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               Mutuals
             </div>
