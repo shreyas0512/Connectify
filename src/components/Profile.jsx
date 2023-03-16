@@ -38,6 +38,8 @@ const Profile = () => {
   const [friends, setFriends] = useState(false);
   const [mutualusers, setMutualusers] = useState([]);
 
+  const [req, setReq] = useState([]);
+
   const [mutualcount, setMutualcount] = useState("");
   const navigate = useNavigate();
   const aboutRef = doc(db, "users", uid);
@@ -61,7 +63,7 @@ const Profile = () => {
     const userRef = doc(db, "users", userid);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      // console.log("Document data:", docSnap.data());
       setuserName(docSnap.data().name);
       setuserprofpic(docSnap.data().imgurl);
     } else {
@@ -93,16 +95,26 @@ const Profile = () => {
   }
   const inter = interests.split(" ");
 
-  //function to search for users
+  //function to get received requests
 
-  async function search() {
-    const q = query(collection(db, "users"), where("name", "==", searcher));
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-      const path = `/profile/${doc.id}`;
-      navigate(path);
-    });
+  async function getReceived() {
+    console.log("get received called");
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const received = docSnap.data().received;
+      console.log("received array ", received);
+      const q = query(collection(db, "users"), where("uid", "in", received));
+      const querySnapshot = await getDocs(q);
+      const newrec = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        newrec.push(doc.data());
+      });
+      console.log(newrec);
+
+      setReq(newrec);
+    }
   }
 
   async function addConnection() {
@@ -122,13 +134,8 @@ const Profile = () => {
     }
     //to add connection request received in other end and store received as an array
     if (profSnap.exists()) {
-      var rec = {
-        uid: userid,
-        read: false,
-      };
       const received = profSnap.data().received;
-      console.log(rec);
-      received.push(rec);
+      received.push(userid);
       await updateDoc(profRef, { received: received });
     } else {
       console.log("couldnt add receive notification");
@@ -184,17 +191,23 @@ const Profile = () => {
     setMutualusers(newmut);
   }
 
-  //fetch mutual users data
+  async function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      const q = query(collection(db, "users"), where("name", "==", searcher));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+        const path = `/profile/${doc.id}`;
+        navigate(path);
+      });
+    }
+  }
 
   //use effects to call functions on page load and on change of state
 
   useEffect(() => {
-    console.log(mutualusers);
+    //console.log(mutualusers);
   }, [mutualusers]);
-
-  useEffect(() => {
-    if (searcher) search();
-  }, [searcher]);
 
   useEffect(() => {
     console.log(uid);
@@ -211,8 +224,14 @@ const Profile = () => {
   }, [uid, userid]);
 
   useEffect(() => {
+    console.log("req changed");
+    getReceived();
+  }, []);
+
+  useEffect(() => {
     checkRequest();
     mutuals();
+    getReceived();
   }, [uid, userid]);
 
   useEffect(() => {
@@ -234,9 +253,10 @@ const Profile = () => {
           onChange={(e) => {
             setSearcher(e.target.value);
           }}
+          onKeyDown={handleKeyDown}
         />
-        <div className="h-[11rem]">
-          <Requests visible={visible} />
+        <div className="h-[11rem] " onClick={getReceived}>
+          <Requests reqs={req} currentuser={userid} />
         </div>
         <div className="flex mt-4 ml-[4rem]">
           <div className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">

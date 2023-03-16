@@ -10,7 +10,7 @@ const Setup = () => {
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [interests, setInterests] = useState("");
-  const [uid, setUid] = useState("");
+  const [userid, setUserid] = useState("");
   const [file, setFile] = useState(null);
   const [imgUploaded, setImgUploaded] = useState(false);
   var received = {
@@ -36,7 +36,8 @@ const Setup = () => {
       if (user) {
         console.log(user.uid + " is the user");
         console.log("user is signed in");
-        setUid(user.uid);
+        setUserid(user.uid);
+        console.log("UID is ", userid);
       }
     });
   }, []);
@@ -54,20 +55,20 @@ const Setup = () => {
         const url = await getDownloadURL(storageRef);
         console.log(url);
 
-        const userRef = doc(collection(db, "users"), uid);
+        const userRef = doc(collection(db, "users"), userid);
         setDoc(userRef, {
           name: name,
           email: localStorage.getItem("email"),
           phone: localStorage.getItem("phone"),
           about: about,
           interests: interests,
-          uid: uid,
+          uid: userid,
           imgurl: url,
           friends: [],
           received: [],
           sent: [],
         });
-        const path = `/profile/${uid}`;
+        const path = `/profile/${userid}`;
         navigate(path);
       });
   };

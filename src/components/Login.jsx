@@ -35,6 +35,7 @@ function Login() {
         const uid1 = user.uid;
         console.log(uid1);
         setUd(uid1);
+        setLocalStorage();
         //localStorage.setItem("uid", uid1);
 
         let path = "/setup";
