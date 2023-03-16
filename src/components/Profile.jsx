@@ -12,6 +12,8 @@ import {
   collection,
   setDoc,
   updateDoc,
+  arrayRemove,
+  onSnapshot,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import logout from "../assets/logout.png";
@@ -25,6 +27,7 @@ const Profile = () => {
   const uid = abc;
   console.log(uid + "abc");
   const [profpic, setProfpic] = useState("");
+  const [isFriend, setIsFriend] = useState(false);
   const [userid, setUserid] = useState("");
   const [visible, setVisible] = useState(false);
   const [isUser, setIsUser] = useState(false);
@@ -95,6 +98,22 @@ const Profile = () => {
   }
   const inter = interests.split(" ");
 
+  //function to check if already a friend
+
+  async function checkFriend() {
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const friends = docSnap.data().friends;
+      if (friends.includes(uid)) {
+        setIsFriend(true);
+      } else {
+        setIsFriend(false);
+      }
+    }
+    console.log("is friend " + isFriend);
+  }
+
   //function to get received requests
 
   async function getReceived() {
@@ -144,6 +163,8 @@ const Profile = () => {
     checkRequest();
   }
 
+  //function to update requests for requests component
+
   //function to check if request already sent
 
   async function checkRequest() {
@@ -191,6 +212,16 @@ const Profile = () => {
     setMutualusers(newmut);
   }
 
+  //function to unfriend user and remove from friends array
+  async function unfriend() {
+    const userRef = doc(db, "users", userid);
+    const profRef = doc(db, "users", uid);
+    const userSnap = await getDoc(userRef);
+    await updateDoc(userRef, { friends: arrayRemove(uid) });
+    await updateDoc(profRef, { friends: arrayRemove(userid) });
+    setIsFriend(false);
+  }
+
   async function handleKeyDown(event) {
     if (event.key === "Enter") {
       const q = query(collection(db, "users"), where("name", "==", searcher));
@@ -203,12 +234,15 @@ const Profile = () => {
     }
   }
 
+  const gotoprof = () => {
+    const path = `/profile/${userid}`;
+    navigate(path);
+  };
   //use effects to call functions on page load and on change of state
 
   useEffect(() => {
-    //console.log(mutualusers);
-  }, [mutualusers]);
-
+    mutuals();
+  }, [uid, userid]);
   useEffect(() => {
     console.log(uid);
     getuserdata();
@@ -226,12 +260,14 @@ const Profile = () => {
   useEffect(() => {
     console.log("req changed");
     getReceived();
+    checkFriend();
   }, []);
 
   useEffect(() => {
     checkRequest();
-    mutuals();
+
     getReceived();
+    checkFriend();
   }, [uid, userid]);
 
   useEffect(() => {
@@ -259,13 +295,16 @@ const Profile = () => {
           <Requests reqs={req} currentuser={userid} />
         </div>
         <div className="flex mt-4 ml-[4rem]">
-          <div className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer">
+          <div
+            onClick={gotoprof}
+            className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer"
+          >
             <img
               src={userprofpic}
               alt="a"
               className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer"
             />
-            Hi, {userName}
+            {userName}
           </div>
 
           <img
@@ -311,6 +350,13 @@ const Profile = () => {
                   >
                     Request Sent
                   </div>
+                ) : isFriend ? (
+                  <div
+                    onClick={unfriend}
+                    className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer pl-8 hover:bg-[#57c776]"
+                  >
+                    Unfriend
+                  </div>
                 ) : (
                   <div
                     className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
@@ -348,18 +394,15 @@ const Profile = () => {
           </div>
         </div>
         {isUser ? (
-          <div className="bg-white shadow-md mt-28 mr-4 rounded-md flex flex-col">
+          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               All Friends
             </div>
+            <div className="-mt-8 ml-8 mb-2 text-gray-400">
+              {mutualcount} Friends
+            </div>
             <div className="flex flex-row">
-              <img src={profpic} alt="" className="h-10 w-10 rounded-md ml-8" />
-              <div className="flex flex-col ml-4">
-                <div className="text-xl font-bold text-green">John Doe</div>
-                <div className="text-sm font-light text-gray-700">
-                  14 Mutual Friends
-                </div>
-              </div>
+              <Mutuals users={mutualusers} />
             </div>
           </div>
         ) : (

@@ -87,8 +87,6 @@ const Requests = (props) => {
                     sent: arrayRemove(userid),
                   });
                   //function to update requests after accept or reject is clicked
-                 
-                
                 };
 
                 return (
