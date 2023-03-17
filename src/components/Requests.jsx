@@ -66,7 +66,7 @@ const Requests = (props) => {
   //function to find no of mutuals with requested user and current user
 
   return (
-    <div className="flex mt-4 ml-[12rem]">
+    <div className="flex mt-6 ml-[12rem]">
       {isOpen ? (
         ""
       ) : (

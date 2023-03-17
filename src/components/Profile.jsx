@@ -20,6 +20,7 @@ import {
 import { db, auth } from "../firebase";
 import logout from "../assets/logout.png";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import Header from "./Header";
 //main function
 
 const Profile = () => {
@@ -276,53 +277,7 @@ const Profile = () => {
         className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
         onClick={reqVisible}
       >
-        <div className="flex flex-row ">
-          <input
-            className="w-72 h-12 rounded-md bg-white shadow-md m-8 ml-4 font-medium pl-2 focus:outline-none resize-none "
-            placeholder="Search for Users"
-            value={searcher}
-            onChange={(e) => {
-              setSearcher(e.target.value);
-            }}
-            onKeyDown={handleKeyDown}
-          />
-          <div className="h-[11rem] ">
-            {" "}
-            {/*might need onclick to fix*/}
-            <Requests currentuser={userid} />
-          </div>
-          <div className="flex mt-4 ml-[4rem]">
-            <div
-              onClick={gotoprof}
-              className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer"
-            >
-              <img
-                src={userprofpic}
-                alt="a"
-                className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer"
-              />
-              {userName}
-            </div>
-
-            <img
-              src={logout}
-              className="h-8 w-8 mt-2 mr-2 cursor-pointer"
-              onClick={() => {
-                signOut(auth)
-                  .then(() => {
-                    console.log("signed out");
-                    localStorage.removeItem("uid");
-                    navigate("/");
-
-                    // Sign-out successful.
-                  })
-                  .catch((error) => {
-                    // An error happened.
-                  });
-              }}
-            />
-          </div>
-        </div>
+        <Header />
         <div className="flex flex-row space-x-12">
           <div className="flex flex-col">
             <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">

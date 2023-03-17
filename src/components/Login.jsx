@@ -70,6 +70,12 @@ function Login() {
         if (errorCode === "auth/wrong-password") {
           setErrormes("Wrong Password");
           console.log(errormes);
+        } else if (errorCode === "auth/user-not-found") {
+          setErrormes("User not found");
+        } else if (errorCode === "auth/invalid-email") {
+          setErrormes("Invalid Email");
+        } else if (errorCode === "auth/too-many-requests") {
+          setErrormes("Too many requests");
         }
 
         console.log(errormes);

@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Setup from "./components/Setup";
 import Profile from "./components/Profile";
+import Feed from "./components/Feed";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/setup" element={<Setup />} />
         <Route path="/profile/:abc" element={<Profile />} />
+        <Route path="/feed" element={<Feed />} />
       </Routes>
     </>
   );
