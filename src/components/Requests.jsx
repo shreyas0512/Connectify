@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useContext } from "react";
+import { ProfileContext } from "../Contexts/ProfileContext";
 import drop from "../assets/dropdown.png";
 import { useState } from "react";
 import {
@@ -9,13 +10,40 @@ import {
   doc,
   getDoc,
   arrayRemove,
+  query,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebase";
+
 const Requests = (props) => {
+  const { requ, setRequ } = useContext(ProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
+  const [noofmut, setNoofmut] = useState(0);
   const userid = props.currentuser;
   //fetch users having uid
+
+  async function getReceived() {
+    console.log("get received called");
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      console.log("Document data:");
+      const received = docSnap.data().received;
+      console.log("received array ", received);
+      const q = query(collection(db, "users"), where("uid", "in", received));
+      const querySnapshot = await getDocs(q);
+      const newrec = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        newrec.push(doc.data());
+      });
+      console.log("newrec");
+      console.log(newrec);
+
+      setRequ(newrec);
+    }
+  }
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -31,7 +59,11 @@ const Requests = (props) => {
     };
   }, [ref]);
 
-  // to handle click outside of the dropdown
+  useEffect(() => {
+    getReceived();
+  }, [userid]);
+
+  //function to find no of mutuals with requested user and current user
 
   return (
     <div className="flex mt-4 ml-[12rem]">
@@ -53,7 +85,25 @@ const Requests = (props) => {
             className="bg-white flex flex-col items-start justify-start shadow-md h-[10rem] w-64  mr-4 rounded-md font-bold text-black  pl-12 pt-3 pr-12   text-sm cursor-pointer  "
           >
             <div className="flex flex-col -ml-8">
-              {props.reqs.map((req) => {
+              {requ.map((req) => {
+                //function to determine to find no of mutuals with requested user and current user
+                // async function getMutuals() {
+                //   const userRef = doc(db, "users", userid);
+                //   const profRef = doc(db, "users", req.uid);
+                //   const userSnap = await getDoc(userRef);
+                //   const profSnap = await getDoc(profRef);
+                //   const friends1 = userSnap.data().friends;
+                //   const friends2 = profSnap.data().friends;
+                //   const mutuals = friends1.filter((friend) =>
+                //     friends2.includes(friend)
+                //   );
+                //   setNoofmut(mutuals.length);
+                // }
+
+                // useEffect(() => {
+                //   getMutuals();
+                // }, [req.uid]);
+
                 const handleClick = async (e) => {
                   if (e.target.id === "accept") {
                     console.log("accept");
@@ -99,7 +149,7 @@ const Requests = (props) => {
                         {req.name}
                       </div>
                       <div className=" text-[#898989] text-[11px] font-light mb-2 -mt-1">
-                        14 Mutual Friends
+                        {noofmut} Mutual Friends
                       </div>
                       <div className="w-[108px] h-[1px] bg-gray-300 mb-3 -mt-2"></div>
                     </div>
