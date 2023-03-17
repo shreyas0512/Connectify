@@ -15,6 +15,7 @@ const Requests = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
   const userid = props.currentuser;
+  //fetch users having uid
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -86,6 +87,8 @@ const Requests = (props) => {
                   await updateDoc(profRef, {
                     sent: arrayRemove(userid),
                   });
+                  //refresh page
+                  window.location.reload();
                   //function to update requests after accept or reject is clicked
                 };
 

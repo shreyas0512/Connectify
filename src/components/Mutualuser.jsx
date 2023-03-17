@@ -1,6 +1,14 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Mutualuser = (props) => {
+  const navigate = useNavigate();
+  function gotoProfile() {
+    navigate(`/profile/${props.users.uid}`);
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex m-3 -ml-4">
@@ -10,8 +18,12 @@ const Mutualuser = (props) => {
           className="h-10 w-10 rounded-md ml-8"
         />
         <div className="flex flex-col ml-4">
-          <div className="text-xl font-bold text-green">{props.users.name}</div>
-          
+          <div
+            onClick={gotoProfile}
+            className="text-xl font-bold text-green cursor-pointer hover:text-[#498e43]"
+          >
+            {props.users.name}
+          </div>
         </div>
       </div>
     </div>

@@ -26,6 +26,7 @@ const Profile = () => {
 
   const uid = abc;
   console.log(uid + "abc");
+  const [mutiszero, setMutiszero] = useState(true);
   const [profpic, setProfpic] = useState("");
   const [isFriend, setIsFriend] = useState(false);
   const [userid, setUserid] = useState("");
@@ -191,6 +192,7 @@ const Profile = () => {
 
   //function to compute mutual friends and show count
   async function mutuals() {
+    console.log("mutuals called", mutiszero);
     console.log("Mutuals");
     const userRef = doc(db, "users", userid);
     const profRef = doc(db, "users", uid);
@@ -202,6 +204,9 @@ const Profile = () => {
     const profriends = profSnap.data().friends;
     const mutual = userfriends.filter((uid) => profriends.includes(uid));
     setMutualcount(mutual.length);
+    if (mutual.length == 0) {
+      setMutiszero(true);
+    }
     const q = query(collection(db, "users"), where("uid", "in", mutual));
     const querySnapshot = await getDocs(q);
     const newmut = [];
@@ -210,6 +215,9 @@ const Profile = () => {
       //console.log(doc.id, " => ", doc.data());
     });
     setMutualusers(newmut);
+    if (mutualusers.length == 0) {
+      console.log("mutuals zero");
+    }
   }
 
   //function to unfriend user and remove from friends array
@@ -220,6 +228,7 @@ const Profile = () => {
     await updateDoc(userRef, { friends: arrayRemove(uid) });
     await updateDoc(profRef, { friends: arrayRemove(userid) });
     setIsFriend(false);
+    window.location.reload();
   }
 
   async function handleKeyDown(event) {
@@ -239,7 +248,9 @@ const Profile = () => {
     navigate(path);
   };
   //use effects to call functions on page load and on change of state
-
+  useEffect(() => {
+    setMutiszero(false);
+  }, [uid, userid]);
   useEffect(() => {
     mutuals();
   }, [uid, userid]);
@@ -394,7 +405,7 @@ const Profile = () => {
           </div>
         </div>
         {isUser ? (
-          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
+          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               All Friends
             </div>
@@ -410,7 +421,7 @@ const Profile = () => {
             <div className="text-3xl font-semibold p-16 pt-2 text-green ">
               Mutuals
             </div>
-            <Mutuals users={mutualusers} />
+            {mutiszero ? "" : <Mutuals users={mutualusers} />}
           </div>
         )}
       </div>

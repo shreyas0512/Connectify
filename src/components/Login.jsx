@@ -13,7 +13,7 @@ function Login() {
   const [login, setLogin] = useState(false);
   const [signup, setSignup] = useState(true);
   const [ud, setUd] = useState("");
-  const [error, setError] = useState("");
+  const [errormes, setErrormes] = useState("");
   let navigate = useNavigate();
 
   function setLocalStorage() {
@@ -42,11 +42,11 @@ function Login() {
         navigate(path);
       })
       .catch((error) => {
-        console.log(error);
         const errorCode = error.code;
-        setError(errorCode);
+        if (errorCode === "auth/wrong-password") {
+        }
+        setErrormes(errorCode);
         console.log(errorCode);
-        const errorMessage = error.message;
       });
   };
 
@@ -67,8 +67,12 @@ function Login() {
       })
       .catch((error) => {
         const errorCode = error.code;
-        console.log(errorCode);
-        setError(errorCode);
+        if (errorCode === "auth/wrong-password") {
+          setErrormes("Wrong Password");
+          console.log(errormes);
+        }
+
+        console.log(errormes);
       });
   };
   function LoginPop() {
