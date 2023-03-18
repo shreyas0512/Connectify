@@ -45,7 +45,7 @@ const Profile = () => {
   const [friends, setFriends] = useState(false);
   const [mutualusers, setMutualusers] = useState([]);
 
-  const [requ, setRequ] = useState([]);
+
 
   const [req, setReq] = useState([]);
 
@@ -272,102 +272,100 @@ const Profile = () => {
   }, [userid]);
 
   return (
-    <ProfileContext.Provider value={{ requ, setRequ }}>
-      <div
-        className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
-        onClick={reqVisible}
-      >
-        <Header />
-        <div className="flex flex-row space-x-12">
-          <div className="flex flex-col">
-            <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
-              <div className="flex">
-                <img
-                  src={profpic}
-                  alt=""
-                  className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
-                />
-                <div className="flex flex-col ml-8">
-                  <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
-                    {name}
+    <div
+      className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
+      onClick={reqVisible}
+    >
+      <Header />
+      <div className="flex flex-row space-x-12">
+        <div className="flex flex-col">
+          <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
+            <div className="flex">
+              <img
+                src={profpic}
+                alt=""
+                className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
+              />
+              <div className="flex flex-col ml-8">
+                <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
+                  {name}
+                </div>
+                {isUser ? (
+                  <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
+                    Edit Profile
                   </div>
-                  {isUser ? (
-                    <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
-                      Edit Profile
-                    </div>
-                  ) : pending ? (
-                    <div
-                      className=" w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-black cursor-default"
-                      onClick={addConnection}
-                    >
-                      Request Sent
-                    </div>
-                  ) : isFriend ? (
-                    <div
-                      onClick={unfriend}
-                      className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer pl-8 hover:bg-[#57c776]"
-                    >
-                      Unfriend
-                    </div>
-                  ) : (
-                    <div
-                      className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
-                      onClick={addConnection}
-                    >
-                      + Connect
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
-              {isUser ? (
-                ""
-              ) : (
-                <div className="text-xl text-[#929191] -ml-8">
-                  {mutualcount} Mutual Friends
-                </div>
-              )}
-              <div className="-ml-8 text-2xl font-medium mt-2">About</div>
-              <div className="-ml-8 text-lg font-light text-gray-700 w-[52rem]">
-                {about}
+                ) : pending ? (
+                  <div
+                    className=" w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-black cursor-default"
+                    onClick={addConnection}
+                  >
+                    Request Sent
+                  </div>
+                ) : isFriend ? (
+                  <div
+                    onClick={unfriend}
+                    className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer pl-8 hover:bg-[#57c776]"
+                  >
+                    Unfriend
+                  </div>
+                ) : (
+                  <div
+                    className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
+                    onClick={addConnection}
+                  >
+                    + Connect
+                  </div>
+                )}
               </div>
             </div>
-            <div className=" p-4 bg-white w-[52rem] m-4 shadow-md rounded-lg  ">
-              <div className="text-2xl font-medium">Interests</div>
-              <div className="flex flex-row mt-4">
-                {inter.map((item) => {
-                  return (
-                    <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
-                      {item}
-                    </div>
-                  );
-                })}
+            <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
+            {isUser ? (
+              ""
+            ) : (
+              <div className="text-xl text-[#929191] -ml-8">
+                {mutualcount} Mutual Friends
               </div>
+            )}
+            <div className="-ml-8 text-2xl font-medium mt-2">About</div>
+            <div className="-ml-8 text-lg font-light text-gray-700 w-[52rem]">
+              {about}
             </div>
           </div>
-          {isUser ? (
-            <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
-              <div className="text-3xl font-semibold p-16 pt-2 text-green ">
-                All Friends
-              </div>
-              <div className="-mt-8 ml-8 mb-2 text-gray-400">
-                {mutualcount} Friends
-              </div>
-              <div className="flex flex-row">
-                <Mutuals users={mutualusers} />
-              </div>
+          <div className=" p-4 bg-white w-[52rem] m-4 shadow-md rounded-lg  ">
+            <div className="text-2xl font-medium">Interests</div>
+            <div className="flex flex-row mt-4">
+              {inter.map((item) => {
+                return (
+                  <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
+                    {item}
+                  </div>
+                );
+              })}
             </div>
-          ) : (
-            <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
-              <div className="text-3xl font-semibold p-16 pt-2 text-green ">
-                Mutuals
-              </div>
-              {mutiszero ? "" : <Mutuals users={mutualusers} />}
-            </div>
-          )}
+          </div>
         </div>
+        {isUser ? (
+          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
+            <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+              All Friends
+            </div>
+            <div className="-mt-8 ml-8 mb-2 text-gray-400">
+              {mutualcount} Friends
+            </div>
+            <div className="flex flex-row">
+              <Mutuals users={mutualusers} />
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
+            <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+              Mutuals
+            </div>
+            {mutiszero ? "" : <Mutuals users={mutualusers} />}
+          </div>
+        )}
       </div>
-    </ProfileContext.Provider>
+    </div>
   );
 };
 

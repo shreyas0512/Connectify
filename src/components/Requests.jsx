@@ -82,7 +82,7 @@ const Requests = (props) => {
         <div ref={ref} className="h-[10rem] ">
           <div
             ref={ref}
-            className="bg-white flex flex-col items-start justify-start shadow-md h-[10rem] w-64  mr-4 rounded-md font-bold text-black  pl-12 pt-3 pr-12   text-sm cursor-pointer  "
+            className="z-[99999] bg-white flex flex-col items-start justify-start shadow-md h-[10rem] w-64  mr-4 rounded-md font-bold text-black  pl-12 pt-3 pr-12   text-sm cursor-pointer  "
           >
             <div className="flex flex-col -ml-8">
               {requ.map((req) => {
