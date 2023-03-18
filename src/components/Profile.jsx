@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Mutuals from "./Mutuals";
 import Requests from "./Requests";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { ProfileContext } from "../Contexts/ProfileContext";
 
 import {
@@ -44,8 +46,7 @@ const Profile = () => {
   const [pending, setPending] = useState(false);
   const [friends, setFriends] = useState(false);
   const [mutualusers, setMutualusers] = useState([]);
-
-
+  const [loading, setLoading] = useState(false);
 
   const [req, setReq] = useState([]);
 

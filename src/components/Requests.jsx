@@ -20,6 +20,7 @@ const Requests = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
   const [noofmut, setNoofmut] = useState(0);
+  const [notempty, setNotempty] = useState(true);
   const userid = props.currentuser;
   //fetch users having uid
 
@@ -40,7 +41,9 @@ const Requests = (props) => {
       });
       console.log("newrec");
       console.log(newrec);
-
+      if (newrec.length() == 0) {
+        setNotempty(false);
+      }
       setRequ(newrec);
     }
   }
