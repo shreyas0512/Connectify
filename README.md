@@ -23,6 +23,14 @@ The following features including the task features as well as 2 additional featu
 # Hosted Link
 https://carestack-39d4e.web.app/
 
+# Demo
+![1-cs](https://user-images.githubusercontent.com/76905421/226198015-a0771c7e-8cf4-40df-9607-5d5b8c2c6ced.png)
+![2-cs](https://user-images.githubusercontent.com/76905421/226198018-c998f90a-3a4c-479b-aec7-e76fc421f980.png)
+![3-cs](https://user-images.githubusercontent.com/76905421/226198023-b683630d-1c4a-4530-8753-b59faa5c2033.png)
+![4-cs](https://user-images.githubusercontent.com/76905421/226198027-f462f2dc-6f86-4b77-a501-884c16d10845.png)
+![5-cs](https://user-images.githubusercontent.com/76905421/226198030-db6dd4c4-698e-4a40-a190-427a8b9c6532.png)
+
+
 <!-- GETTING STARTED -->
 ## To run on local machine
 ## Dependencies
