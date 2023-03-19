@@ -21,7 +21,7 @@ const Posts = (props) => {
           <div className="bg-white flex flex-col  justify-center mt-8 mb-8 shadow-md rounded-md">
             <div
               onClick={handleClick}
-              className="text-green font-bold text-2xl self-start m-8 ml-4 mt-2 cursor-pointer hover:text-[#3d7438]"
+              className="text-green font-semibold text-2xl self-start m-8 ml-4 mt-2 cursor-pointer hover:text-[#3d7438]"
             >
               {post.name}
             </div>

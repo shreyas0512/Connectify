@@ -12,6 +12,7 @@ import { db } from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gallery from "../assets/gallery.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Suggestions from "./Suggestions";
 import Posts from "./Posts";
 import {
   collection,
@@ -33,6 +34,7 @@ const Feed = () => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [friends, setFriends] = useState([]);
   const { name, setName } = useContext(ProfileContext);
+  const [suggestions, setSuggestions] = useState([]);
 
   //function to get all details of friends of user from database
   const getFriends = async () => {
@@ -136,6 +138,55 @@ const Feed = () => {
     }
   };
 
+  async function getSuggestions() {
+    //get all users
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const myfriends = docSnap.data().friends;
+      console.log("my friends", myfriends);
+      //get friends of my friends
+      const q = query(collection(db, "users"), where("uid", "in", myfriends));
+      const querySnapshot = await getDocs(q);
+      const newrec = [];
+      querySnapshot.forEach((doc) => {
+        //map over list of friends of friends
+        doc.data().friends.map((friend) => {
+          if (!myfriends.includes(friend)) {
+            newrec.push(friend);
+          }
+        });
+      });
+      console.log("newrec");
+      console.log(newrec);
+      //get unique values
+      const unique = [...new Set(newrec)];
+      console.log("unique");
+      console.log(unique);
+      //remove my id
+      const filtered = unique.filter((item) => item !== userid);
+      console.log("filtered");
+      console.log(filtered);
+      //got uid of all fitered users
+      const q2 = query(collection(db, "users"), where("uid", "in", filtered));
+      const querySnapshot2 = await getDocs(q2);
+      const newrec2 = [];
+      querySnapshot2.forEach((doc) => {
+        newrec2.push(doc.data());
+      });
+      console.log("newrec2");
+      console.log(newrec2);
+      setSuggestions(newrec2);
+    }
+  }
+
+  useEffect(() => {
+    getSuggestions();
+  }, [userid]);
+  useEffect(() => {
+    getSuggestions();
+  }, []);
+
   useEffect(() => {
     fetchPosts();
   }, [userid]);
@@ -156,7 +207,12 @@ const Feed = () => {
         <Header />
       </div>
       <div className="flex space-x-16 ml-[20rem]">
-        <div className="flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md  "></div>
+        <div className="flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md  ">
+          <div className="text-2xl font-semibold text-center pt-2 text-green mb-4">
+            Suggestions
+          </div>
+          <Mutuals users={suggestions} />
+        </div>
         <div className=" h-screen w-[30rem]  flex flex-col">
           <div className="bg-white w-fill  rounded-md shadow-md flex flex-col justify-center  ">
             <textarea
@@ -206,7 +262,7 @@ const Feed = () => {
           </div>
         </div>
         <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden h-[30rem] ">
-          <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+          <div className="text-2xl font-semibold p-16 pt-2 text-green ">
             All Friends
           </div>
           <div className="-mt-8 ml-8 mb-2 text-gray-400"></div>
