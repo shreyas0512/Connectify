@@ -32,6 +32,7 @@ const Feed = () => {
   const [content, setContent] = useState("");
   const [postUpdated, setPostUpdated] = useState(false);
   const [friends, setFriends] = useState([]);
+  const { name, setName } = useContext(ProfileContext);
 
   //function to get all details of friends of user from database
   const getFriends = async () => {
@@ -55,6 +56,21 @@ const Feed = () => {
       console.log("No such document!");
     }
   };
+
+  //function to get users name
+  const getName = async () => {
+    const userRef = doc(collection(db, "users"), userid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      setName(userDoc.data().name);
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  useEffect(() => {
+    getName();
+  }, [userid]);
 
   useEffect(() => {
     getFriends();
@@ -81,6 +97,7 @@ const Feed = () => {
             img: url,
             time: new Date().toLocaleString(),
             uid: userid,
+            name: name,
           }),
         });
         setImg(null);
@@ -88,7 +105,6 @@ const Feed = () => {
         setPostUpdated(true);
         if (postUpdated) {
           setContent("");
-          window.location.reload();
         }
       });
   };

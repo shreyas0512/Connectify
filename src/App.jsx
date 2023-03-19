@@ -14,6 +14,7 @@ function App() {
   const [requ, setRequ] = useState([]);
   const [selfid, setSelfid] = useState("");
   const [mutualusers, setMutualusers] = useState([]);
+  const [name, setName] = useState("");
 
   const contextValue = {
     requ,
@@ -22,6 +23,8 @@ function App() {
     setSelfid,
     mutualusers,
     setMutualusers,
+    name,
+    setName,
   };
   return (
     <>

@@ -10,12 +10,14 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { doc, getDoc } from "firebase/firestore";
 import logout from "../assets/logout.png";
 import Requests from "./Requests";
+import homeIcon from "../assets/home.png";
 
 const Header = () => {
   const [userid, setUserid] = useState("");
   const [searcher, setSearcher] = useState("");
   const [userName, setUserName] = useState("");
   const [userprofpic, setUserprofpic] = useState("");
+
   const navigate = useNavigate();
 
   async function handleKeyDown(event) {
@@ -65,6 +67,13 @@ const Header = () => {
 
   return (
     <div className="flex flex-row ">
+      <img
+        src={homeIcon}
+        className="h-10 w-10 m-6 -ml-28 mr-12 mt-7 cursor-pointer"
+        onClick={() => {
+          navigate("/feed");
+        }}
+      />
       <input
         className="w-96 h-12 rounded-md bg-white shadow-md m-6 -ml-6 font-medium pl-2 focus:outline-none resize-none "
         placeholder="Search for Users"

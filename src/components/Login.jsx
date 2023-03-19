@@ -5,15 +5,18 @@ import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { ProfileContext } from "../Contexts/ProfileContext";
+import { db } from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 function Login() {
-  const [name, setName] = useState("");
   const { selfid, setSelfid } = useContext(ProfileContext);
   const [email, setEmail] = useState("");
+  const { name, setName } = useContext(ProfileContext);
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [login, setLogin] = useState(false);
   const [signup, setSignup] = useState(true);
+
   const [ud, setUd] = useState("");
   const [errormes, setErrormes] = useState("");
   let navigate = useNavigate();
@@ -28,10 +31,31 @@ function Login() {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
+
       const uid = user.uid;
+
       setSelfid(uid);
     }
   });
+
+  //set the name of user to name state variable
+  async function setNameState() {
+    const profRef = doc(db, "users", selfid);
+    const docSnap = await getDoc(profRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      setName(docSnap.data().name);
+      console.log("Name is ", docSnap.data().name);
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+  useEffect(() => {
+    setNameState();
+    console.log("Name is ", name);
+  }, [selfid]);
 
   useEffect(() => {
     // localStorage.setItem("uid", ud);
