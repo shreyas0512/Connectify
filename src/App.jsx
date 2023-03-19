@@ -12,9 +12,20 @@ import { ProfileContext } from "./Contexts/ProfileContext";
 
 function App() {
   const [requ, setRequ] = useState([]);
+  const [selfid, setSelfid] = useState("");
+  const [mutualusers, setMutualusers] = useState([]);
+
+  const contextValue = {
+    requ,
+    setRequ,
+    selfid,
+    setSelfid,
+    mutualusers,
+    setMutualusers,
+  };
   return (
     <>
-      <ProfileContext.Provider value={{ requ, setRequ }}>
+      <ProfileContext.Provider value={contextValue}>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<Home />} />

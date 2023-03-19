@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { ProfileContext } from "../Contexts/ProfileContext";
 
 function Login() {
   const [name, setName] = useState("");
+  const { selfid, setSelfid } = useContext(ProfileContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -21,6 +23,15 @@ function Login() {
     localStorage.setItem("email", email);
     localStorage.setItem("phone", phone);
   }
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      setSelfid(uid);
+    }
+  });
 
   useEffect(() => {
     // localStorage.setItem("uid", ud);

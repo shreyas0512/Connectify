@@ -6,7 +6,8 @@ import Requests from "./Requests";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { ProfileContext } from "../Contexts/ProfileContext";
-
+import { useContext } from "react";
+import homeLogo from "../assets/home.png";
 import {
   doc,
   getDoc,
@@ -28,8 +29,12 @@ import Header from "./Header";
 const Profile = () => {
   const [name, setName] = useState("");
   const { abc } = useParams();
+  const { selfid, setSelfid } = useContext(ProfileContext);
+  const { mutualusers, setMutualusers } = useContext(ProfileContext);
 
   const uid = abc;
+
+  console.log(selfid, "asdaqdefdf");
   console.log(uid + "abc");
   const [mutiszero, setMutiszero] = useState(true); //to check if mutuals are zero
   const [profpic, setProfpic] = useState(""); //to store profile pic
@@ -45,7 +50,7 @@ const Profile = () => {
   const [userprofpic, setuserprofpic] = useState("");
   const [pending, setPending] = useState(false);
   const [friends, setFriends] = useState(false);
-  const [mutualusers, setMutualusers] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const [req, setReq] = useState([]);
@@ -60,6 +65,7 @@ const Profile = () => {
         console.log(user.uid + " is the user");
         console.log("user is signed in");
         setUserid(user.uid);
+        setSelfid(user.uid);
       }
     });
   }, []);

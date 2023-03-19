@@ -12,6 +12,7 @@ import { db } from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gallery from "../assets/gallery.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Posts from "./Posts";
 import {
   collection,
   getDocs,
@@ -26,15 +27,41 @@ import {
 const Feed = () => {
   const [userid, setUserid] = useState("");
   const { requ, setRequ } = useContext(ProfileContext);
-  const [feedposts, setFeedPosts] = useState([]);
+  const [feedposts, setFeedposts] = useState([]);
   const [img, setImg] = useState(null);
   const [content, setContent] = useState("");
   const [postUpdated, setPostUpdated] = useState(false);
+  const [friends, setFriends] = useState([]);
+
+  //function to get all details of friends of user from database
+  const getFriends = async () => {
+    const userRef = doc(collection(db, "users"), userid);
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      console.log("Document data:", userDoc.data());
+      const allfrnds = userDoc.data().friends;
+      console.log("friends array ", allfrnds);
+      const q = query(collection(db, "users"), where("uid", "in", allfrnds));
+      const querySnapshot = await getDocs(q);
+      const newrec = [];
+      querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        newrec.push(doc.data());
+      });
+      console.log("newrec");
+      console.log(newrec);
+      setFriends(newrec);
+    } else {
+      console.log("No such document!");
+    }
+  };
+
+  useEffect(() => {
+    getFriends();
+  }, [userid]);
 
   //function to update the post object to the document of the user by uploading image first
-
   const postData = async () => {
-    setPostUpdated(false);
     const storage = getStorage();
     const storageRef = ref(storage, "postimages/" + img.name);
     uploadBytes(storageRef, img)
@@ -45,43 +72,56 @@ const Feed = () => {
       .then(async () => {
         const url = await getDownloadURL(storageRef);
         console.log(url);
+
         const userRef = doc(collection(db, "users"), userid);
+
         updateDoc(userRef, {
           posts: arrayUnion({
             content: content,
             img: url,
             time: new Date().toLocaleString(),
+            uid: userid,
           }),
-        }).then(() => {
-          //to update or refresh page after post
-          setPostUpdated(true);
-          if (postUpdated) {
-            setContent("");
-            setImg(null);
-          }
         });
-
-        console.log(postUpdated);
+        setImg(null);
+        //to update or refresh page after post
+        setPostUpdated(true);
+        if (postUpdated) {
+          setContent("");
+          window.location.reload();
+        }
       });
   };
 
+  const newrec = [];
   //function to fetch friends posts from the database
+
   const fetchPosts = async () => {
     const userRef = doc(collection(db, "users"), userid);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
+      console.log("fetching posts");
       const friends = userDoc.data().friends;
       const q = query(collection(db, "users"), where("uid", "in", friends));
       const querySnapshot = await getDocs(q);
-      const newrec = [];
+
       querySnapshot.forEach((doc) => {
-        newrec.push(doc.data().posts);
-        console.log(doc.data().posts);
+        const posts = doc.data().posts;
+        if (posts) {
+          posts.forEach((post) => {
+            newrec.push(post);
+            console.log(newrec);
+          });
+        }
       });
     } else {
       console.log("No such document!");
     }
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [userid]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -91,7 +131,6 @@ const Feed = () => {
         setUserid(user.uid);
       }
     });
-    fetchPosts();
   }, []);
 
   return (
@@ -143,15 +182,20 @@ const Feed = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white w-fill h-[30rem] rounded-md shadow-md mt-8 ">
+          <div className="bg-white w-fill h-[30rem] rounded-md shadow-md mt-8 text-black ">
             {/*friends posts */}
+
+            <Posts posts={newrec} />
           </div>
         </div>
-        <div className="bg-white shadow-md rounded-md flex flex-col">
+        <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
           <div className="text-3xl font-semibold p-16 pt-2 text-green ">
             All Friends
           </div>
-          {/* {mutiszero ? "" : <Mutuals users={mutualusers} />} */}
+          <div className="-mt-8 ml-8 mb-2 text-gray-400"></div>
+          <div className="flex flex-row">
+            <Mutuals users={friends} />
+          </div>
         </div>
       </div>
     </div>

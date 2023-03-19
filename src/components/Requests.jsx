@@ -41,7 +41,7 @@ const Requests = (props) => {
       });
       console.log("newrec");
       console.log(newrec);
-      if (newrec.length() == 0) {
+      if (newrec.length == 0) {
         setNotempty(false);
       }
       setRequ(newrec);
