@@ -1,4 +1,12 @@
-# carestack
+# CareStack
+
+## Problem Statement
+Create a mini social network. The application should have features like:-
+* Users should be able to sign up/sign in, and create a profile for themselves.
+* Search for other users.
+* View other users' profiles & make them friends/unfriend them.
+*  View a list of mutual friends between users. A mutual friend is a user who is a friend of two other users who may or may not know each other. 
+
 # Connectify 
 Connectify is a Social Network web app that allows users to signup, create accounts, search and add friends, view mutual friends, and post images with text content.
 
@@ -35,6 +43,10 @@ https://www.loom.com/share/325e01522681439bad2d7c2ea890d7da
 ![3-cs](https://user-images.githubusercontent.com/76905421/226198023-b683630d-1c4a-4530-8753-b59faa5c2033.png)
 ![4-cs](https://user-images.githubusercontent.com/76905421/226198027-f462f2dc-6f86-4b77-a501-884c16d10845.png)
 ![5-cs](https://user-images.githubusercontent.com/76905421/226198030-db6dd4c4-698e-4a40-a190-427a8b9c6532.png)
+![Screenshot (1116)](https://user-images.githubusercontent.com/76905421/226199647-be56bc9b-7489-4e70-843e-9c8cf6c96380.png)
+![Screenshot (1117)](https://user-images.githubusercontent.com/76905421/226199655-976de073-4c48-49a4-8a1c-8d319cb0c039.png)
+
+
 
 
 
