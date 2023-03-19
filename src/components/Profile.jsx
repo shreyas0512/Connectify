@@ -156,8 +156,6 @@ const Profile = () => {
     checkRequest();
   }
 
-  //function to update requests for requests component
-
   //function to check if request already sent
 
   async function checkRequest() {
@@ -223,22 +221,6 @@ const Profile = () => {
     window.location.reload();
   }
 
-  async function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      const q = query(collection(db, "users"), where("name", "==", searcher));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        const path = `/profile/${doc.id}`;
-        navigate(path);
-      });
-    }
-  }
-
-  const gotoprof = () => {
-    const path = `/profile/${userid}`;
-    navigate(path);
-  };
   //use effects to call functions on page load and on change of state
   useEffect(() => {
     setMutiszero(false);

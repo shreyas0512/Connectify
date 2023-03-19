@@ -3,7 +3,15 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, setDoc, addDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  addDoc,
+  doc,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 const Setup = () => {
@@ -13,6 +21,9 @@ const Setup = () => {
   const [userid, setUserid] = useState("");
   const [file, setFile] = useState(null);
   const [imgUploaded, setImgUploaded] = useState(false);
+  const [queri, setQueri] = useState("");
+  const [results, setResults] = useState([]);
+  const [focus, setFocus] = useState(false);
   var received = {
     uid: "",
     read: false,
@@ -30,6 +41,27 @@ const Setup = () => {
     setImgUploaded(true);
     setFile(file);
   }
+
+  //function to fetch autocomplete results
+  const fetchResults = async () => {
+    const q = query(
+      collection(db, "users"),
+      where("name", ">=", queri),
+      where("name", "<=", queri + "\uf8ff")
+    );
+    const querySnapshot = await getDocs(q);
+    const newrec = [];
+    querySnapshot.forEach((doc) => {
+      newrec.push(doc.data());
+    });
+
+    setResults(newrec);
+  };
+
+  useEffect(() => {
+    fetchResults();
+    console.log("results", results);
+  }, [queri]);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -135,16 +167,34 @@ const Setup = () => {
             </div>
           </div>
         </div>
-        <div className="bg-white mt-12  w-12/12 h-[22rem] rounded-md shadow-md flex flex-col items-center">
+        {/* <div className="bg-white mt-12  w-12/12 h-[22rem] rounded-md shadow-md flex flex-col items-center">
           <div className="pt-4 text-green font-bold text-3xl  ">
             Let’s get you going by connecting!
           </div>
           <input
             type="text"
+            onFocus={() => {
+              setFocus(true);
+              console.log("focus");
+            }}
+            onBlur={() => {
+              setFocus(false);
+              console.log("blur");
+            }}
+            onChange={(e) => setQueri(e.target.value)}
             className=" w-7/12 h-12 mt-8 bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light"
             placeholder="search for users"
           />
-        </div>
+          {focus && (
+            <div className="w-7/12 z-30 bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light">
+              {results.map((result) => (
+                <div className="flex flex-row items-center">
+                  <div>{result.name}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div> */}
         <div
           onClick={handleSubmit}
           className="bg-green p-2 mt-8 w-[17rem] ml-[23rem] pl-8 mb-8 rounded-md hover:bg-white hover:text-green hover:border-green border-2 cursor-pointer transition font-bold text-2xl text-white"

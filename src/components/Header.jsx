@@ -17,6 +17,8 @@ const Header = () => {
   const [searcher, setSearcher] = useState("");
   const [userName, setUserName] = useState("");
   const [userprofpic, setUserprofpic] = useState("");
+  const [searchresults, setSearchresults] = useState([]);
+  const [focus, setFocus] = useState(false);
 
   const navigate = useNavigate();
 
@@ -31,6 +33,26 @@ const Header = () => {
       });
     }
   }
+
+  const fetchResults = async () => {
+    const q = query(
+      collection(db, "users"),
+      where("name", ">=", searcher),
+      where("name", "<=", searcher + "\uf8ff")
+    );
+    const querySnapshot = await getDocs(q);
+    const newrec = [];
+    querySnapshot.forEach((doc) => {
+      newrec.push(doc.data());
+    });
+
+    setSearchresults(newrec);
+  };
+
+  useEffect(() => {
+    fetchResults();
+    console.log("results", searchresults);
+  }, [searcher]);
 
   const gotoprof = () => {
     const path = `/profile/${userid}`;
@@ -74,16 +96,40 @@ const Header = () => {
           navigate("/feed");
         }}
       />
-
-      <input
-        className="w-96 h-12 rounded-md bg-white shadow-md m-6 -ml-6 font-medium pl-2 focus:outline-none resize-none "
-        placeholder="Search for Users"
-        value={searcher}
-        onChange={(e) => {
-          setSearcher(e.target.value);
-        }}
-        onKeyDown={handleKeyDown}
-      />
+      <div className=" relative">
+        <input
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          className="w-96 h-12 rounded-md bg-white shadow-md m-6 -ml-6 font-medium pl-2 focus:outline-none resize-none"
+          placeholder="Search for Users"
+          value={searcher}
+          onChange={(e) => {
+            setSearcher(e.target.value);
+          }}
+          onKeyDown={handleKeyDown}
+        />
+        {focus && (
+          <div className="w-full -ml-6 h-30 z-30 overflow-auto bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light -mt-5 absolute">
+            {searchresults
+              ? searchresults.map((result) => (
+                  <div className="flex flex-row items-center">
+                    <div
+                      key={result.id}
+                      className="font-medium mt-1 w-fill cursor-pointer"
+                      onClick={() => {
+                        const path = `/profile/${result.id}`;
+                        console.log(path);
+                        navigate(path);
+                      }}
+                    >
+                      {result.name}
+                    </div>
+                  </div>
+                ))
+              : ""}
+          </div>
+        )}
+      </div>
       <div className="h-[10rem] ">
         {" "}
         {/*might need onclick to fix*/}
