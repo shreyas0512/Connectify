@@ -66,5 +66,6 @@ https://www.loom.com/share/325e01522681439bad2d7c2ea890d7da
 * Currently certain error messages haven't been displayed which I plan on implementing very soon. As of now user has to check console for authentication issues etc.
 * Edit profile feature hasnt been implemented. 
 * Loading animations or skeletons can be implented for loading while user waits.
+* Lack of responsiveness and issues with certain UI elements.
 
 
