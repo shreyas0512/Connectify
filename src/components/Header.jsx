@@ -66,14 +66,15 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="flex flex-row ">
+    <div className="flex flex-row w-min-screen  ml-16 min-w-screen">
       <img
         src={homeIcon}
-        className="h-10 w-10 m-6 -ml-28 mr-12 mt-7 cursor-pointer"
+        className="m-6 -ml-28 mr-12 mt-7 cursor-pointer h-10 w-10"
         onClick={() => {
           navigate("/feed");
         }}
       />
+
       <input
         className="w-96 h-12 rounded-md bg-white shadow-md m-6 -ml-6 font-medium pl-2 focus:outline-none resize-none "
         placeholder="Search for Users"

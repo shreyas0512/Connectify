@@ -334,7 +334,7 @@ const Profile = () => {
               </div>
             )}
             <div className="-ml-8 text-2xl font-medium mt-2">About</div>
-            <div className="-ml-8 text-lg font-light text-gray-700 w-[52rem]">
+            <div className="-ml-8 text-lg font-light text-gray-700 w-fill">
               {about}
             </div>
           </div>

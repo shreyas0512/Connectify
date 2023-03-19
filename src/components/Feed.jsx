@@ -128,6 +128,7 @@ const Feed = () => {
             newrec.push(post);
             console.log(newrec);
           });
+          setFeedposts(newrec);
         }
       });
     } else {
@@ -198,13 +199,13 @@ const Feed = () => {
               </div>
             </div>
           </div>
-          <div className="bg-white w-fill h-[30rem] rounded-md shadow-md mt-8 text-black ">
+          <div className=" w-fill  mt-8 text-black ">
             {/*friends posts */}
 
-            <Posts posts={newrec} />
+            <Posts posts={feedposts} />
           </div>
         </div>
-        <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
+        <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden h-[30rem] ">
           <div className="text-3xl font-semibold p-16 pt-2 text-green ">
             All Friends
           </div>
