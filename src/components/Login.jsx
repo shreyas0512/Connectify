@@ -136,7 +136,6 @@ function Login() {
             className="flex flex-col space-y-8 font-light text-xl justify-center"
           >
             <input
-              value={name}
               onChange={(e) => setName(e.target.value)}
               type="text"
               placeholder="Name"

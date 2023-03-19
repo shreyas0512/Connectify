@@ -12,7 +12,7 @@ import { db } from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gallery from "../assets/gallery.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import Suggestions from "./Suggestions";
+
 import Posts from "./Posts";
 import {
   collection,
@@ -103,6 +103,7 @@ const Feed = () => {
           }),
         });
         setImg(null);
+        setContent("");
         //to update or refresh page after post
         setPostUpdated(true);
         if (postUpdated) {

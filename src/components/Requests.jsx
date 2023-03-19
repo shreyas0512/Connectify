@@ -89,24 +89,6 @@ const Requests = (props) => {
           >
             <div className="flex flex-col -ml-8">
               {requ.map((req) => {
-                //function to determine to find no of mutuals with requested user and current user
-                // async function getMutuals() {
-                //   const userRef = doc(db, "users", userid);
-                //   const profRef = doc(db, "users", req.uid);
-                //   const userSnap = await getDoc(userRef);
-                //   const profSnap = await getDoc(profRef);
-                //   const friends1 = userSnap.data().friends;
-                //   const friends2 = profSnap.data().friends;
-                //   const mutuals = friends1.filter((friend) =>
-                //     friends2.includes(friend)
-                //   );
-                //   setNoofmut(mutuals.length);
-                // }
-
-                // useEffect(() => {
-                //   getMutuals();
-                // }, [req.uid]);
-
                 const handleClick = async (e) => {
                   if (e.target.id === "accept") {
                     console.log("accept");
@@ -146,26 +128,25 @@ const Requests = (props) => {
                 };
 
                 return (
-                  <div className="flex items-start justify-start -mt-6">
-                    <div className="flex flex-col">
-                      <div className="text-[#444444] text-[13px] w-32 font-semibold pt-4  ">
-                        {req.name}
+                  <div className="flex flex-col">
+                    <div className="flex items-start justify-start -mt-6">
+                      <div className="flex flex-col">
+                        <div className="text-[#444444] text-[13px] w-32 font-semibold pt-4  ">
+                          {req.name}
+                        </div>
                       </div>
-                      <div className=" text-[#898989] text-[11px] font-light mb-2 -mt-1">
-                        {noofmut} Mutual Friends
-                      </div>
-                      <div className="w-[108px] h-[1px] bg-gray-300 mb-3 -mt-2"></div>
+                      <div
+                        className="rounded-full bg-blue-600 shadow-md h-5 w-5 mt-5 ml-6 hover:bg-blue-400"
+                        id="accept"
+                        onClick={handleClick}
+                      ></div>
+                      <div
+                        className="rounded-full bg-red-600 shadow-md h-5 w-5 mt-5 ml-6 -mr-6 hover:bg-red-400"
+                        id="reject"
+                        onClick={handleClick}
+                      ></div>
                     </div>
-                    <div
-                      className="rounded-full bg-blue-600 shadow-md h-5 w-5 mt-5 ml-6 hover:bg-blue-400"
-                      id="accept"
-                      onClick={handleClick}
-                    ></div>
-                    <div
-                      className="rounded-full bg-red-600 shadow-md h-5 w-5 mt-5 ml-6 -mr-6 hover:bg-red-400"
-                      id="reject"
-                      onClick={handleClick}
-                    ></div>
+                    <div className="w-[210px] h-[1.5px] bg-gray-300 mb-3 mt-2"></div>
                   </div>
                 );
               })}
