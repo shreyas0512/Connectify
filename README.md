@@ -10,6 +10,10 @@ Create a mini social network. The application should have features like:-
 # Connectify 
 Connectify is a Social Network web app that allows users to signup, create accounts, search and add friends, view mutual friends, and post images with text content.
 
+#Design
+Figma was used for developing the UI for the application.
+https://www.figma.com/file/2qGtqeNCD2o9kmOvNauphn/Untitled?node-id=0%3A1&t=XHoAjrp4zRuaXXw7-1
+
 # Front-End
 React is used for developing the front-end of the web-app as is required. For CSS, I have used Tailwind.css as it makes designing webpages drastically faster.
 Context Api has been used in certain areas for State management as it helps to prevent prop drilling which can be quite troublesome. The files have been refactored to certain extent. I have also added comments above most functions to reduce complexity and increase readablitiy of code.
