@@ -21,6 +21,7 @@ const Setup = () => {
   const [userid, setUserid] = useState("");
   const [file, setFile] = useState(null);
   const [imgUploaded, setImgUploaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const [queri, setQueri] = useState("");
   const [results, setResults] = useState([]);
   const [focus, setFocus] = useState(false);
@@ -75,13 +76,22 @@ const Setup = () => {
   }, []);
 
   const handleSubmit = (e) => {
+    setImgError(false);
     e.preventDefault();
+    if (file == null) {
+      setImgError(true);
+    }
+
     const storage = getStorage();
     const storageRef = ref(storage, "images/" + file.name);
     uploadBytes(storageRef, file)
       .then((snapshot) => {
         console.log("Uploaded a blob or file!");
         console.log(snapshot);
+      })
+      .catch((error) => {
+        console.log(error);
+        setImgError(true);
       })
       .then(async () => {
         const url = await getDownloadURL(storageRef);
@@ -102,6 +112,13 @@ const Setup = () => {
         });
         const path = `/profile/${userid}`;
         navigate(path);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
   return (
@@ -201,6 +218,13 @@ const Setup = () => {
         >
           View your profile
         </div>
+        {imgError ? (
+          <div className="text-center -mt-8 text-red-700">
+            You Must Upload Image to Create Account
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

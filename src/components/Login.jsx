@@ -61,6 +61,7 @@ function Login() {
     // localStorage.setItem("uid", ud);
   }, [ud]);
   const handleSignUp = (e) => {
+    setErrormes("");
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -78,14 +79,26 @@ function Login() {
       })
       .catch((error) => {
         const errorCode = error.code;
-        if (errorCode === "auth/wrong-password") {
+        if (errorCode === "auth/internal-error") {
+          setErrormes("Please Enter Password");
         }
-        setErrormes(errorCode);
-        console.log(errorCode);
+        if (errorCode === "auth/wrong-password") {
+          setErrormes("Wrong Password");
+        }
+        if (errorCode === "auth/email-already-in-use") {
+          setErrormes("Email already in use");
+        }
+        if (errorCode === "auth/invalid-email") {
+          setErrormes("Invalid Email");
+        }
+        if (errorCode === "auth/weak-password") {
+          setErrormes("Weak Password");
+        }
       });
   };
 
   const handleLogin = (e) => {
+    setErrormes("");
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -225,6 +238,7 @@ function Login() {
             )}
           </div>
         </div>
+        <div className="mt-8 ml-8 text-red-700">{errormes}</div>
       </div>
     </div>
   );

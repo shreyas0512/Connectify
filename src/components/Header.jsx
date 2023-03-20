@@ -88,10 +88,10 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="flex flex-row w-min-screen  ml-16 min-w-screen">
+    <div className="flex flex-row w-min-screen  ml-16 min-w-screen ">
       <img
         src={homeIcon}
-        className="m-6 -ml-28 mr-12 mt-7 cursor-pointer h-10 w-10"
+        className="m-6 -ml-28 mr-12 mt-7 cursor-pointer h-10 w-10 hover:opacity-70"
         onClick={() => {
           navigate("/feed");
         }}

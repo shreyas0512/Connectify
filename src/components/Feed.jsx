@@ -35,6 +35,7 @@ const Feed = () => {
   const [friends, setFriends] = useState([]);
   const { name, setName } = useContext(ProfileContext);
   const [suggestions, setSuggestions] = useState([]);
+  const [imgError, setImgError] = useState(false);
 
   //function to get all details of friends of user from database
   const getFriends = async () => {
@@ -80,6 +81,13 @@ const Feed = () => {
 
   //function to update the post object to the document of the user by uploading image first
   const postData = async () => {
+    setImgError(false);
+    if (img == null) {
+      setImgError(true);
+    }
+
+    setPostUpdated(false);
+
     const storage = getStorage();
     const storageRef = ref(storage, "postimages/" + img.name);
     uploadBytes(storageRef, img)
@@ -108,6 +116,8 @@ const Feed = () => {
         setPostUpdated(true);
         if (postUpdated) {
           setContent("");
+
+          //after a timeout of 2 second, set postUpdated to false
         }
       });
   };
@@ -203,12 +213,12 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center  ">
+    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
       <div className="z-20">
         <Header />
       </div>
       <div className="flex space-x-16 ml-[20rem]">
-        <div className="flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md  ">
+        <div className="flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thin scrollbar-thumb-gray-400 scrollbar-corner-neutral-800">
           <div className="text-2xl font-semibold text-center pt-2 text-green mb-4">
             Suggestions
           </div>
@@ -238,6 +248,16 @@ const Feed = () => {
                   onChange={(e) => setImg(e.target.files[0])}
                   style={{ visibility: "hidden" }}
                 />
+                {imgError && (
+                  <div className="text-center text-red-700 text-md mb-8 ml-24">
+                    You must upload image before posting
+                  </div>
+                )}
+                {postUpdated && (
+                  <div className="text-center text-[#36953e] text-md mb-8 ml-24 font-semibold">
+                    Posted Succesfully!
+                  </div>
+                )}
                 {img ? (
                   <img
                     src={img ? URL.createObjectURL(img) : ""}

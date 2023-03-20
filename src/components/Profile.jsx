@@ -19,6 +19,7 @@ import {
   updateDoc,
   arrayRemove,
   onSnapshot,
+  arrayUnion,
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import logout from "../assets/logout.png";
@@ -49,7 +50,7 @@ const Profile = () => {
   const [userName, setuserName] = useState("");
   const [userprofpic, setuserprofpic] = useState("");
   const [pending, setPending] = useState(false);
-  const [friends, setFriends] = useState(false);
+  const [alreadyrec, setAlreadyrec] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -155,6 +156,51 @@ const Profile = () => {
 
     checkRequest();
   }
+
+  //function to show that you have already received a request from the user and to show the accept button
+  async function checkReqlist() {
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const received = docSnap.data().received;
+      if (received.includes(uid)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  //function to accept request and add to friends list
+  async function acceptRequest() {
+    const userRef = doc(db, "users", userid);
+    const profRef = doc(db, "users", uid);
+    const profSnap = await getDoc(profRef);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      await updateDoc(userRef, {
+        received: arrayRemove(uid),
+        friends: arrayUnion(uid),
+      });
+    }
+    if (profSnap.exists()) {
+      await updateDoc(profRef, {
+        sent: arrayRemove(userid),
+        friends: arrayUnion(userid),
+      });
+    }
+    setIsFriend(true);
+    setPending(false);
+
+    console.log("request accepted");
+    window.location.reload();
+  }
+
+  useEffect(() => {
+    checkReqlist().then((res) => {
+      setAlreadyrec(res);
+    });
+  }, []);
 
   //function to check if request already sent
 
@@ -297,6 +343,13 @@ const Profile = () => {
                   >
                     Unfriend
                   </div>
+                ) : checkReqlist ? (
+                  <div
+                    className="bg-green w-[13rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
+                    onClick={acceptRequest}
+                  >
+                    Accept Request
+                  </div>
                 ) : (
                   <div
                     className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
@@ -342,7 +395,7 @@ const Profile = () => {
               {mutualcount} Friends
             </div>
             <div className="flex flex-row">
-              <Mutuals users={mutualusers} />
+              {mutiszero ? "" : <Mutuals users={mutualusers} />}
             </div>
           </div>
         ) : (
