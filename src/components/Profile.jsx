@@ -8,6 +8,9 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { ProfileContext } from "../Contexts/ProfileContext";
 import { useContext } from "react";
 import homeLogo from "../assets/home.png";
+import { useMediaQuery } from "react-responsive";
+import Profilemob from "./Profilemob";
+
 import {
   doc,
   getDoc,
@@ -25,30 +28,34 @@ import { db, auth } from "../firebase";
 import logout from "../assets/logout.png";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import Header from "./Header";
+
 //main function
 
 const Profile = () => {
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 700px)" });
   const [name, setName] = useState("");
   const { abc } = useParams();
   const { selfid, setSelfid } = useContext(ProfileContext);
   const { mutualusers, setMutualusers } = useContext(ProfileContext);
-
+  //const [uid, setUid] = useState("");
   const uid = abc;
-
   console.log(selfid, "asdaqdefdf");
   console.log(uid + "abc");
-  const [mutiszero, setMutiszero] = useState(true); //to check if mutuals are zero
+
   const [profpic, setProfpic] = useState(""); //to store profile pic
   const [isFriend, setIsFriend] = useState(false); //to check if user is friend
   const [userid, setUserid] = useState("");
   const [visible, setVisible] = useState(false);
   const [isUser, setIsUser] = useState(false);
+  const [userData, setUserData] = useState([]);
+
   const interestRef = doc(db, "users", uid);
   const [about, setAbout] = useState("");
   const [interests, setInterests] = useState("");
   const [searcher, setSearcher] = useState("");
   const [userName, setuserName] = useState("");
   const [userprofpic, setuserprofpic] = useState("");
+  const [queri, setQueri] = useState("");
   const [pending, setPending] = useState(false);
   const [alreadyrec, setAlreadyrec] = useState(false);
 
@@ -81,6 +88,7 @@ const Profile = () => {
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       // console.log("Document data:", docSnap.data());
+      setUserData(docSnap.data());
       setuserName(docSnap.data().name);
       setuserprofpic(docSnap.data().imgurl);
     } else {
@@ -164,12 +172,16 @@ const Profile = () => {
     if (docSnap.exists()) {
       const received = docSnap.data().received;
       if (received.includes(uid)) {
-        return true;
+        setAlreadyrec(true);
       } else {
-        return false;
+        setAlreadyrec(false);
       }
     }
   }
+
+  useEffect(() => {
+    checkReqlist();
+  }, [uid, userid]);
 
   //function to accept request and add to friends list
   async function acceptRequest() {
@@ -196,12 +208,6 @@ const Profile = () => {
     window.location.reload();
   }
 
-  useEffect(() => {
-    checkReqlist().then((res) => {
-      setAlreadyrec(res);
-    });
-  }, []);
-
   //function to check if request already sent
 
   async function checkRequest() {
@@ -226,36 +232,6 @@ const Profile = () => {
     setVisible(!visible);
   };
 
-  //function to compute mutual friends and show count
-  async function mutuals() {
-    console.log("mutuals called", mutiszero);
-    console.log("Mutuals");
-    const userRef = doc(db, "users", userid);
-    const profRef = doc(db, "users", uid);
-
-    const docSnap = await getDoc(userRef);
-    const profSnap = await getDoc(profRef);
-
-    const userfriends = docSnap.data().friends;
-    const profriends = profSnap.data().friends;
-    const mutual = userfriends.filter((uid) => profriends.includes(uid));
-    setMutualcount(mutual.length);
-    if (mutual.length == 0) {
-      setMutiszero(true);
-    }
-    const q = query(collection(db, "users"), where("uid", "in", mutual));
-    const querySnapshot = await getDocs(q);
-    const newmut = [];
-    querySnapshot.forEach((doc) => {
-      newmut.push(doc.data());
-      //console.log(doc.id, " => ", doc.data());
-    });
-    setMutualusers(newmut);
-    if (mutualusers.length == 0) {
-      console.log("mutuals zero");
-    }
-  }
-
   //function to unfriend user and remove from friends array
   async function unfriend() {
     const userRef = doc(db, "users", userid);
@@ -267,10 +243,38 @@ const Profile = () => {
     window.location.reload();
   }
 
+  //function to call mutuals function
+  async function mutuals() {
+    setMutualusers([]);
+    console.log("Mutuals");
+    const userRef = doc(db, "users", userid);
+    const profRef = doc(db, "users", uid);
+
+    const docSnap = await getDoc(userRef);
+    const profSnap = await getDoc(profRef);
+
+    const userfriends = docSnap.data().friends;
+    const profriends = profSnap.data().friends;
+    const mutual = userfriends.filter((uid) => profriends.includes(uid));
+    console.log("mutuals is calle1212");
+
+    setMutualcount(mutual.length);
+
+    const q = query(collection(db, "users"), where("uid", "in", mutual));
+    const querySnapshot = await getDocs(q);
+    const newmut = [];
+    querySnapshot.forEach((doc) => {
+      newmut.push(doc.data());
+
+      //console.log(doc.id, " => ", doc.data());
+    });
+
+    console.log(newmut);
+    setMutualusers(newmut);
+  }
+
   //use effects to call functions on page load and on change of state
-  useEffect(() => {
-    setMutiszero(false);
-  }, [uid, userid]);
+
   useEffect(() => {
     mutuals();
   }, [uid, userid]);
@@ -307,107 +311,114 @@ const Profile = () => {
   }, [userid]);
 
   return (
-    <div
-      className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
-      onClick={reqVisible}
-    >
-      <Header />
-      <div className="flex flex-row space-x-12">
-        <div className="flex flex-col">
-          <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
-            <div className="flex">
-              <img
-                src={profpic}
-                alt=""
-                className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
-              />
-              <div className="flex flex-col ml-8">
-                <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
-                  {name}
+    <>
+      {isTabletOrMobile ? (
+        <Profilemob userdata={userData} />
+      ) : (
+        <div
+          className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
+          onClick={reqVisible}
+        >
+          <Header />
+
+          <div className="flex flex-row space-x-12">
+            <div className="flex flex-col">
+              <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
+                <div className="flex">
+                  <img
+                    src={profpic}
+                    alt=""
+                    className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
+                  />
+                  <div className="flex flex-col ml-8">
+                    <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
+                      {name}
+                    </div>
+                    {isUser ? (
+                      <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
+                        Edit Profile
+                      </div>
+                    ) : pending ? (
+                      <div
+                        className=" w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-black cursor-default"
+                        onClick={addConnection}
+                      >
+                        Request Sent
+                      </div>
+                    ) : isFriend ? (
+                      <div
+                        onClick={unfriend}
+                        className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer pl-8 hover:bg-[#57c776]"
+                      >
+                        Unfriend
+                      </div>
+                    ) : alreadyrec ? (
+                      <div
+                        className="bg-green w-[13rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
+                        onClick={acceptRequest}
+                      >
+                        Accept Request
+                      </div>
+                    ) : (
+                      <div
+                        className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
+                        onClick={addConnection}
+                      >
+                        + Connect
+                      </div>
+                    )}
+                  </div>
                 </div>
+                <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
                 {isUser ? (
-                  <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
-                    Edit Profile
-                  </div>
-                ) : pending ? (
-                  <div
-                    className=" w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-black cursor-default"
-                    onClick={addConnection}
-                  >
-                    Request Sent
-                  </div>
-                ) : isFriend ? (
-                  <div
-                    onClick={unfriend}
-                    className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer pl-8 hover:bg-[#57c776]"
-                  >
-                    Unfriend
-                  </div>
-                ) : checkReqlist ? (
-                  <div
-                    className="bg-green w-[13rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
-                    onClick={acceptRequest}
-                  >
-                    Accept Request
-                  </div>
+                  ""
                 ) : (
-                  <div
-                    className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
-                    onClick={addConnection}
-                  >
-                    + Connect
+                  <div className="text-xl text-[#929191] -ml-8">
+                    {mutualcount} Mutual Friends
                   </div>
                 )}
+                <div className="-ml-8 text-2xl font-medium mt-2">About</div>
+                <div className="-ml-8 text-lg font-light text-gray-700 w-fill">
+                  {about}
+                </div>
+              </div>
+              <div className=" p-4 bg-white w-[52rem] m-4 shadow-md rounded-lg  ">
+                <div className="text-2xl font-medium">Interests</div>
+                <div className="flex flex-row mt-4">
+                  {inter.map((item) => {
+                    return (
+                      <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
+                        {item}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-            <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
             {isUser ? (
-              ""
+              <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden">
+                <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+                  All Friends
+                </div>
+                <div className="-mt-8 ml-8 mb-2 text-gray-400">
+                  {mutualcount} Friends
+                </div>
+                <div className="flex flex-row">
+                  <Mutuals users={mutualusers} />
+                </div>
+              </div>
             ) : (
-              <div className="text-xl text-[#929191] -ml-8">
-                {mutualcount} Mutual Friends
+              <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
+                <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+                  Mutuals
+                </div>
+                <Mutuals users={mutualusers} />
               </div>
             )}
-            <div className="-ml-8 text-2xl font-medium mt-2">About</div>
-            <div className="-ml-8 text-lg font-light text-gray-700 w-fill">
-              {about}
-            </div>
-          </div>
-          <div className=" p-4 bg-white w-[52rem] m-4 shadow-md rounded-lg  ">
-            <div className="text-2xl font-medium">Interests</div>
-            <div className="flex flex-row mt-4">
-              {inter.map((item) => {
-                return (
-                  <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
-                    {item}
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
-        {isUser ? (
-          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden overflow-y-auto">
-            <div className="text-3xl font-semibold p-16 pt-2 text-green ">
-              All Friends
-            </div>
-            <div className="-mt-8 ml-8 mb-2 text-gray-400">
-              {mutualcount} Friends
-            </div>
-            <div className="flex flex-row">
-              {mutiszero ? "" : <Mutuals users={mutualusers} />}
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col">
-            <div className="text-3xl font-semibold p-16 pt-2 text-green ">
-              Mutuals
-            </div>
-            {mutiszero ? "" : <Mutuals users={mutualusers} />}
-          </div>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

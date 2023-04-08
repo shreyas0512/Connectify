@@ -18,6 +18,7 @@ import {
 import { db } from "../firebase";
 
 const Requests = (props) => {
+  console.log("props in requests", props);
   const { requ, setRequ } = useContext(ProfileContext);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
@@ -37,17 +38,15 @@ const Requests = (props) => {
       console.log("received array ", received);
       const q = query(collection(db, "users"), where("uid", "in", received));
       const querySnapshot = await getDocs(q);
-      const newrec = [];
-      querySnapshot.forEach((doc) => {
-        console.log(doc.data());
-        newrec.push(doc.data());
-      });
-      console.log("newrec");
+
+      const newrec = querySnapshot.docs.map((doc) => doc.data());
+
       console.log(newrec);
       if (newrec.length > 0) {
         setIsZero(true);
       }
       setRequ(newrec);
+      console.log("requ", newrec);
     }
   }
 
@@ -92,7 +91,7 @@ const Requests = (props) => {
         <div ref={ref} className="h-[10rem] ">
           <div
             ref={ref}
-            className="z-[99999] bg-white flex flex-col items-start justify-start shadow-md  w-64  mr-4 rounded-md font-bold text-black  pl-12 pt-3 pr-12   text-sm cursor-pointer relative  "
+            className="z-[99999] bg-white min-h-[10rem] flex flex-col items-start justify-start shadow-md  w-64  mr-4 rounded-md font-bold text-black  pl-12 pt-3 pr-12   text-sm cursor-pointer relative  "
           >
             {isZero ? (
               <div className="flex flex-col -ml-8">

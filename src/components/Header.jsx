@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
@@ -19,6 +19,20 @@ const Header = () => {
   const [userprofpic, setUserprofpic] = useState("");
   const [searchresults, setSearchresults] = useState([]);
   const [focus, setFocus] = useState(false);
+  const searchRef = useRef();
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = (event) => {
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setFocus(false);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -89,18 +103,18 @@ const Header = () => {
 
   return (
     <div className="flex flex-row w-min-screen  ml-16 min-w-screen ">
-      <img
-        src={homeIcon}
-        className="m-6 -ml-28 mr-12 mt-7 cursor-pointer h-10 w-10 hover:opacity-70"
+      <div
+        className=" bg-green h-8 mt-8 rounded-md cursor-pointer hover:bg-[#128f29] text-center pt-1 font-bold text-white px-2"
         onClick={() => {
           navigate("/feed");
         }}
-      />
+      >
+        Feed
+      </div>
       <div className=" relative">
         <input
           onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
-          className="w-96 h-12 rounded-md bg-white shadow-md m-6 -ml-6 font-medium pl-2 focus:outline-none resize-none"
+          className="w-96 h-12 rounded-md bg-white shadow-md m-6  font-medium pl-2 focus:outline-none resize-none"
           placeholder="Search for Users"
           value={searcher}
           onChange={(e) => {
@@ -109,17 +123,22 @@ const Header = () => {
           onKeyDown={handleKeyDown}
         />
         {focus && (
-          <div className="w-full -ml-6 h-30 z-30 overflow-auto bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light -mt-5 absolute">
+          <div
+            ref={searchRef}
+            className="w-full -ml-6 h-30 z-30 max-h-64 overflow-auto bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light -mt-5 absolute"
+          >
             {searchresults
               ? searchresults.map((result) => (
                   <div className="flex flex-row items-center">
                     <div
                       key={result.id}
-                      className="font-medium mt-1 w-fill cursor-pointer"
+                      className="font-medium mt-1 w-fill cursor-pointer  hover:text-green"
                       onClick={() => {
-                        const path = `/profile/${result.id}`;
+                        setSearcher(result.name);
+                        const path = `/profile/${result.uid}`;
                         console.log(path);
                         navigate(path);
+                        setFocus(false);
                       }}
                     >
                       {result.name}

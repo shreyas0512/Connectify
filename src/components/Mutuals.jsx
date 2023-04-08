@@ -15,7 +15,7 @@ const Mutuals = (props) => {
           return (
             <div>
               <Mutualuser users={user} />
-              <div className="bg-gray-200 h-[2px] m-3 -mt-1 shadow-md w-[15rem] "></div>
+              <div className="bg-gray-200 h-[2px] m-3 -mt-1 shadow-md w-[15rem]"></div>
             </div>
           );
         })}
