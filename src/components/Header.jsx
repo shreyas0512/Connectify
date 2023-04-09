@@ -125,7 +125,7 @@ const Header = () => {
         {focus && (
           <div
             ref={searchRef}
-            className="w-full -ml-6 h-30 z-30 max-h-64 overflow-auto bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light -mt-5 absolute"
+            className="w-96 ml-5 h-30 z-30 max-h-64 overflow-auto bg-[#f3f2f2] border-0 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-md text-xl font-light -mt-5 absolute"
           >
             {searchresults
               ? searchresults.map((result) => (

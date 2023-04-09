@@ -32,9 +32,11 @@ import Header from "./Header";
 //main function
 
 const Profile = () => {
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 700px)" });
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1000px)" });
   const [name, setName] = useState("");
   const { abc } = useParams();
+  const [selfData, setSelfData] = useState([]);
+  const { interests, setInterests } = useContext(ProfileContext);
   const { selfid, setSelfid } = useContext(ProfileContext);
   const { mutualusers, setMutualusers } = useContext(ProfileContext);
   //const [uid, setUid] = useState("");
@@ -51,7 +53,7 @@ const Profile = () => {
 
   const interestRef = doc(db, "users", uid);
   const [about, setAbout] = useState("");
-  const [interests, setInterests] = useState("");
+
   const [searcher, setSearcher] = useState("");
   const [userName, setuserName] = useState("");
   const [userprofpic, setuserprofpic] = useState("");
@@ -87,8 +89,9 @@ const Profile = () => {
     const userRef = doc(db, "users", userid);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
+      setSelfData(docSnap.data());
       // console.log("Document data:", docSnap.data());
-      setUserData(docSnap.data());
+
       setuserName(docSnap.data().name);
       setuserprofpic(docSnap.data().imgurl);
     } else {
@@ -102,6 +105,7 @@ const Profile = () => {
     const picRef = doc(db, "users", uid);
     const docSnap = await getDoc(picRef);
     if (docSnap.exists()) {
+      setUserData(docSnap.data());
       setProfpic(docSnap.data().imgurl);
       setName(docSnap.data().name);
     } else {
@@ -284,7 +288,7 @@ const Profile = () => {
     if (uid) {
       getPic();
     }
-  }, [uid, userid]);
+  }, [uid, userid, isTabletOrMobile]);
 
   useEffect(() => {
     if (uid === userid) {
@@ -302,7 +306,7 @@ const Profile = () => {
     checkRequest();
 
     checkFriend();
-  }, [uid, userid]);
+  }, [uid, userid, isTabletOrMobile]);
 
   useEffect(() => {
     if (userid) {
@@ -313,7 +317,14 @@ const Profile = () => {
   return (
     <>
       {isTabletOrMobile ? (
-        <Profilemob userdata={userData} />
+        <Profilemob
+          selfData={selfData}
+          userdata={userData}
+          isFriend={isFriend}
+          alreadyrec={alreadyrec}
+          isUser={isUser}
+          mutualusers={mutualusers}
+        />
       ) : (
         <div
           className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
