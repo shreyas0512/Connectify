@@ -70,7 +70,7 @@ const MobileHeader = (props) => {
         <input
           type="text"
           placeholder="Search"
-          className="w-2/4 p-1 rounded-md shadow-md m-4  focus:outline-none "
+          className="w-2/4 p-1 rounded-md shadow-md m-4  text-xs focus:outline-none "
           value={searcher}
           onChange={(e) => {
             setSearcher(e.target.value);
@@ -82,14 +82,14 @@ const MobileHeader = (props) => {
           <img
             src={addfriendmobile}
             alt="asd"
-            className=" h-7 w-7 mt-5 ml-16 "
+            className=" h-6 w-6 mt-5 ml-16 "
           />
         </div>
         <div>
           <img
             src={props.selfData.imgurl}
             alt="asd"
-            className=" h-8 w-8 mt-5 ml-8 mr-8 rounded-full"
+            className=" h-8 w-8 mt-3.5 ml-8 mr-8 rounded-full"
             onClick={() => {
               navigate(`/profile/${props.selfData.uid}`);
             }}

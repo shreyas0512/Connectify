@@ -5,7 +5,6 @@ import { useState } from "react";
 import { useEffect, useContext } from "react";
 import { ProfileContext } from "../Contexts/ProfileContext";
 
-
 const Profilemob = (props) => {
   const navigate = useNavigate();
   const { mutualusers, interests } = useContext(ProfileContext);
@@ -50,7 +49,7 @@ const Profilemob = (props) => {
           <div className="h-[1px] w-full bg-gray-300 mt-32 -ml-64 mr-2 rounded-sm"></div>
         </div>
         <div className="ml-2 font-medium">About</div>
-        <div className="ml-2 text-gray-500 text-xs mt-2 w-full m-2">
+        <div className="ml-2 text-gray-500 text-xs mt-2 w-full px-2 m-2">
           {props.userdata.about}
         </div>
       </div>
