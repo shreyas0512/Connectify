@@ -3,6 +3,9 @@ import addfriendmobile from "../assets/addfriendmobile.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { useEffect } from "react";
+import logoutimg from "../assets/logout.png";
+import home from "../assets/home-filled.png";
+import Popupreq from "./Popupreq";
 import {
   doc,
   getDoc,
@@ -19,6 +22,7 @@ import {
 import { db, auth } from "../firebase";
 
 const MobileHeader = (props) => {
+  const [openrequests, setOpenrequests] = useState(false);
   const navigate = useNavigate();
   const [searcher, setSearcher] = useState("");
   const [searchresults, setSearchresults] = useState([]);
@@ -66,34 +70,59 @@ const MobileHeader = (props) => {
 
   return (
     <div>
+      {openrequests && (
+        <Popupreq trigger={openrequests} setTrigger={setOpenrequests} />
+      )}
       <div className="flex w-screen">
         <input
           type="text"
           placeholder="Search"
-          className="w-2/4 p-1 rounded-md shadow-md m-4  text-xs focus:outline-none "
+          className="w-2/4 p-1 px-2 rounded-md shadow-md m-4  text-xs focus:outline-none "
           value={searcher}
           onChange={(e) => {
             setSearcher(e.target.value);
           }}
           onKeyDown={handleKeyDown}
         />
-
-        <div>
+        <div className="flex mt-5 space-x-5">
+          <div>
+            <img
+              src={addfriendmobile}
+              alt="asd"
+              className=" h-4 w-4  "
+              onClick={() => {
+                setOpenrequests(true);
+                console.log(openrequests);
+              }}
+            />
+          </div>
           <img
-            src={addfriendmobile}
+            src={home}
             alt="asd"
-            className=" h-6 w-6 mt-5 ml-16 "
-          />
-        </div>
-        <div>
-          <img
-            src={props.selfData.imgurl}
-            alt="asd"
-            className=" h-8 w-8 mt-3.5 ml-8 mr-8 rounded-full"
+            className=" h-5 w-5  "
             onClick={() => {
-              navigate(`/profile/${props.selfData.uid}`);
+              navigate("/feed");
             }}
           />
+          <img
+            src={logoutimg}
+            alt="asd"
+            className=" h-5 w-5  "
+            onClick={() => {
+              auth.signOut();
+              navigate("/");
+            }}
+          />
+          <div className="">
+            <img
+              src={props.selfData.imgurl}
+              alt="asd"
+              className=" h-6 w-6  rounded-full"
+              onClick={() => {
+                navigate(`/profile/${props.selfData.uid}`);
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
