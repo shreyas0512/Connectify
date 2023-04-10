@@ -213,24 +213,24 @@ function Login() {
         <div className="mt-4 flex flex-col">
           <div className="flex flex-row space-x-1 ">
             {signup ? (
-              <div className="sm:ml-8 sm:text-lg text-xs px-2 ">
+              <div className="sm:ml-2 ml-2 sm:text-lg text-xs px-2 pr-0 ">
                 Already have an account?{" "}
               </div>
             ) : (
-              <div className="sm:ml-8 sm:text-lg text-xs px-2">
+              <div className="sm:ml-2 sm:text-lg text-xs px-2 pr-0">
                 Dont have an account?{" "}
               </div>
             )}
             {login ? (
               <h1
-                className="text-textgreen sm:text-lg cursor-pointer mb-2 text-xs  px-2"
+                className="text-textgreen sm:text-lg cursor-pointer mb-2 text-xs  px-2 pr-5"
                 onClick={LoginPop}
               >
                 Register
               </h1>
             ) : (
               <h1
-                className="text-textgreen sm:text-lg cursor-pointer mb-2 text-xs px-2 "
+                className="text-textgreen sm:text-lg cursor-pointer mb-2 text-xs px-2 pr-5 "
                 onClick={LoginPop}
               >
                 Login
