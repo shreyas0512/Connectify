@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import addfriendmobile from "../assets/addfriendmobile.png";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import logoutimg from "../assets/logout.png";
 import home from "../assets/home-filled.png";
 import Popupreq from "./Popupreq";
+import { ProfileContext } from "../Contexts/ProfileContext";
 import {
   doc,
   getDoc,
@@ -28,6 +29,30 @@ const MobileHeader = (props) => {
   const [searchresults, setSearchresults] = useState([]);
   const [focus, setFocus] = useState(false);
   const searchRef = useRef();
+  const { requ, setRequ } = useContext(ProfileContext);
+
+  //function to fetch requests
+  const userid = props.selfData.uid;
+  console.log("userid", userid);
+  const fetchRequests = async () => {
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      const data = docSnap.data();
+      const requests = data.received;
+
+      console.log("requests", requests);
+      const q = query(collection(db, "users"), where("uid", "in", requests));
+      const querySnapshot = await getDocs(q);
+      const newrec = querySnapshot.docs.map((doc) => doc.data());
+      console.log("newrec", newrec);
+      setRequ(newrec);
+    }
+  };
+  useEffect(() => {
+    fetchRequests();
+  }, []);
   const fetchResults = async () => {
     const q = query(
       collection(db, "users"),
@@ -91,6 +116,8 @@ const MobileHeader = (props) => {
               alt="asd"
               className=" h-4 w-4  "
               onClick={() => {
+                fetchRequests();
+
                 setOpenrequests(true);
                 console.log(openrequests);
               }}

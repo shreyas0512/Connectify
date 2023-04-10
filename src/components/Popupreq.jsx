@@ -8,29 +8,41 @@ const Popupreq = (props) => {
   const { requ, setRequ } = useContext(ProfileContext);
   const navigate = useNavigate();
 
-  const popupRef = useRef();
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        props.setTrigger(false);
-        console.log("clicked outside");
-      }
-    };
+  const popupRef = useRef(null);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (popupRef.current && !popupRef.current.contains(event.target)) {
+  //       props.setTrigger(false);
+  //       console.log("clicked outside");
+  //     }
+  //   };
 
-    document.addEventListener("click", handleClickOutside);
+  //   document.addEventListener("click", handleClickOutside);
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [popupRef]);
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, []);
 
   return (
-    <div className="w-screen h-screen  absolute bg-transaprent flex justify-center items-center">
+    <div className="w-screen h-screen  absolute bg-[#bcb8b899] flex justify-center items-center">
       <div
         className="bg-[#FFFFFF] w-5/6 h-4/6 self-center center shadow-md rounded-md flex flex-col "
         ref={popupRef}
       >
-        <div className=" font-medium text-center mt-2">Requests</div>
+        <div className="flex justify-between">
+          <div className=" font-medium  text-center mt-2 p-2 pl-28">
+            Requests
+          </div>
+          <div
+            className="font-black self-end mr-4 mb-2 text-lg"
+            onClick={() => {
+              props.setTrigger(false);
+            }}
+          >
+            X
+          </div>
+        </div>
         <div className="h-2/4 overflow-scroll text-sm">
           {requ.map((req) => {
             return (

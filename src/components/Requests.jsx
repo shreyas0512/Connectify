@@ -69,6 +69,11 @@ const Requests = (props) => {
   }, [userid]);
 
   useEffect(() => {
+    getReceived();
+    console.log("requ called on refresh");
+  }, []);
+
+  useEffect(() => {
     console.log(isZero);
   }, [requ]);
 
