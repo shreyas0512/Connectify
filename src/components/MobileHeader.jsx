@@ -29,7 +29,8 @@ const MobileHeader = (props) => {
   const [searchresults, setSearchresults] = useState([]);
   const [focus, setFocus] = useState(false);
   const searchRef = useRef();
-  const { requ, setRequ } = useContext(ProfileContext);
+  const { requ, setRequ, setSuggestions, suggestions } =
+    useContext(ProfileContext);
 
   //function to fetch requests
   const userid = props.selfData.uid;
@@ -50,8 +51,51 @@ const MobileHeader = (props) => {
       setRequ(newrec);
     }
   };
+
+  async function getSuggestions() {
+    //get all users
+    const userRef = doc(db, "users", userid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      const myfriends = docSnap.data().friends;
+      console.log("my friends", myfriends);
+      //get friends of my friends
+      const q = query(collection(db, "users"), where("uid", "in", myfriends));
+      const querySnapshot = await getDocs(q);
+      const newrec = [];
+      querySnapshot.forEach((doc) => {
+        //map over list of friends of friends
+        doc.data().friends.map((friend) => {
+          if (!myfriends.includes(friend)) {
+            newrec.push(friend);
+          }
+        });
+      });
+      console.log("newrec");
+      console.log(newrec);
+      //get unique values
+      const unique = [...new Set(newrec)];
+      console.log("unique");
+      console.log(unique);
+      //remove my id
+      const filtered = unique.filter((item) => item !== userid);
+      console.log("filtered");
+      console.log(filtered);
+      //got uid of all fitered users
+      const q2 = query(collection(db, "users"), where("uid", "in", filtered));
+      const querySnapshot2 = await getDocs(q2);
+      const newrec2 = [];
+      querySnapshot2.forEach((doc) => {
+        newrec2.push(doc.data());
+      });
+      console.log("newrec2");
+      console.log(newrec2);
+      setSuggestions(newrec2);
+    }
+  }
   useEffect(() => {
     fetchRequests();
+    getSuggestions();
   }, []);
   const fetchResults = async () => {
     const q = query(
@@ -117,6 +161,7 @@ const MobileHeader = (props) => {
               className=" h-4 w-4  "
               onClick={() => {
                 fetchRequests();
+                getSuggestions();
 
                 setOpenrequests(true);
                 console.log(openrequests);

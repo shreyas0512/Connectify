@@ -34,8 +34,9 @@ const Feed = () => {
   const [postUpdated, setPostUpdated] = useState(false);
   const [friends, setFriends] = useState([]);
   const { name, setName } = useContext(ProfileContext);
-  const [suggestions, setSuggestions] = useState([]);
+
   const [imgError, setImgError] = useState(false);
+  const { suggestions, setSuggestions } = useContext(ProfileContext);
 
   //function to get all details of friends of user from database
   const getFriends = async () => {

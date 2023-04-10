@@ -39,6 +39,7 @@ const Profile = () => {
   const { interests, setInterests } = useContext(ProfileContext);
   const { selfid, setSelfid } = useContext(ProfileContext);
   const { mutualusers, setMutualusers } = useContext(ProfileContext);
+  const { suggestions, setSuggestions } = useContext(ProfileContext);
   //const [uid, setUid] = useState("");
   const uid = abc;
   console.log(selfid, "asdaqdefdf");
@@ -324,6 +325,11 @@ const Profile = () => {
           alreadyrec={alreadyrec}
           isUser={isUser}
           mutualusers={mutualusers}
+          acceptRequest={acceptRequest}
+          addConnection={addConnection}
+          checkRequest={checkRequest}
+          pending={pending}
+          unfriend={unfriend}
         />
       ) : (
         <div

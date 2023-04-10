@@ -8,6 +8,9 @@ import { ProfileContext } from "../Contexts/ProfileContext";
 const Profilemob = (props) => {
   const navigate = useNavigate();
   const { mutualusers, interests } = useContext(ProfileContext);
+  useEffect(() => {
+    props.checkRequest();
+  }, []);
 
   return (
     <div className="bg-white h-screen w-screen flex flex-col items-center">
@@ -25,11 +28,26 @@ const Profilemob = (props) => {
             </div>
             {!props.isUser ? (
               !props.isFriend ? (
-                <div className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2">
-                  + Connect
-                </div>
+                !props.pending ? (
+                  <div
+                    className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                    onClick={props.addConnection}
+                  >
+                    + Connect
+                  </div>
+                ) : (
+                  <div
+                    className=" rounded-md  text-sm py-0.5 ml-8 w-28  mt-2"
+                    onClick={props.addConnection}
+                  >
+                    Request Sent
+                  </div>
+                )
               ) : (
-                <div className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2">
+                <div
+                  className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                  onClick={props.unfriend}
+                >
                   Unfriend
                 </div>
               )
