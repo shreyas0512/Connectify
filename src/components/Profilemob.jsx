@@ -14,7 +14,10 @@ const Profilemob = (props) => {
 
   return (
     <div className="bg-white h-screen w-screen flex flex-col items-center">
-      <MobileHeader selfData={props.selfData} />
+      <MobileHeader
+        selfData={props.selfData}
+        acceptRequest={props.acceptRequest}
+      />
 
       <div className="bg-[#FFFFFF] w-11/12 mt-24 -ml-2 rounded-md shadow-md flex flex-col">
         <div className="flex">
@@ -29,15 +32,24 @@ const Profilemob = (props) => {
             {!props.isUser ? (
               !props.isFriend ? (
                 !props.pending ? (
-                  <div
-                    className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
-                    onClick={props.addConnection}
-                  >
-                    + Connect
-                  </div>
+                  props.alreadyrec ? (
+                    <div
+                      className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                      onClick={props.acceptRequest}
+                    >
+                      Accept
+                    </div>
+                  ) : (
+                    <div
+                      className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                      onClick={props.addConnection}
+                    >
+                      + Connect
+                    </div>
+                  )
                 ) : (
                   <div
-                    className=" rounded-md  text-sm py-0.5 ml-8 w-28  mt-2"
+                    className="  px-1 text-sm py-0.5 ml-8 w-full mt-2"
                     onClick={props.addConnection}
                   >
                     Request Sent

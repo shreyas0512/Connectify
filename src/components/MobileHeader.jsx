@@ -140,7 +140,11 @@ const MobileHeader = (props) => {
   return (
     <div>
       {openrequests && (
-        <Popupreq trigger={openrequests} setTrigger={setOpenrequests} />
+        <Popupreq
+          trigger={openrequests}
+          setTrigger={setOpenrequests}
+          userid={userid}
+        />
       )}
       <div className="flex w-screen">
         <input

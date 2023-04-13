@@ -12,6 +12,8 @@ import { db } from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gallery from "../assets/gallery.png";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useMediaQuery } from "react-responsive";
+import MobileFeed from "./MobileFeed";
 
 import Posts from "./Posts";
 import {
@@ -29,6 +31,7 @@ const Feed = () => {
   const [userid, setUserid] = useState("");
   const { requ, setRequ } = useContext(ProfileContext);
   const [feedposts, setFeedposts] = useState([]);
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1000px)" });
   const [img, setImg] = useState(null);
   const [content, setContent] = useState("");
   const [postUpdated, setPostUpdated] = useState(false);
@@ -214,86 +217,105 @@ const Feed = () => {
   }, []);
 
   return (
-    <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
-      <div className="z-20">
-        <Header />
-      </div>
-      <div className="flex space-x-16 ml-[20rem]">
-        <div className="flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thin scrollbar-thumb-gray-400 scrollbar-corner-neutral-800">
-          <div className="text-2xl font-semibold text-center pt-2 text-green mb-4">
-            Suggestions
+    <>
+      {isTabletOrMobile ? (
+        <MobileFeed userid={userid} postData={postData}
+        img={img}
+        setImg={setImg}
+        content={content}
+        setContent={setContent}
+        imgError={imgError}
+        setImgError={setImgError}
+        feedposts={feedposts}
+        suggestions={suggestions}
+        friends={friends}
+        setFriends={setFriends}
+        postUpdated={postUpdated}
+
+        />
+      ) : (
+        <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
+          <div className="z-20">
+            <Header />
           </div>
-          <Mutuals users={suggestions} />
-        </div>
-        <div className=" h-screen w-[30rem]  flex flex-col">
-          <div className="bg-white w-fill  rounded-md shadow-md flex flex-col justify-center  ">
-            <textarea
-              onChange={(e) => setContent(e.target.value)}
-              value={content}
-              className="w-[29rem] h-20 mt-4
-              m-2 rounded-md shadow-md p-2  focus:border-none focus:outline-none resize-none"
-              placeholder="What's on your mind?"
-            />
-            <div className="flex self-end">
-              <div className="mt-4 flex flex-col">
-                <label for="hiddenFileInput" className="ml-8">
-                  <img
-                    src={gallery}
-                    alt=""
-                    className="w-8 h-8 mr-4 mt-0.5 cursor-pointer shadow-xl"
-                  />
-                </label>
-                <input
-                  type="file"
-                  id="hiddenFileInput"
-                  onChange={(e) => setImg(e.target.files[0])}
-                  style={{ visibility: "hidden" }}
-                />
-                {imgError && (
-                  <div className="text-center text-red-700 text-md mb-8 ml-24">
-                    You must upload image before posting
-                  </div>
-                )}
-                {postUpdated && (
-                  <div className="text-center text-[#36953e] text-md mb-8 ml-24 font-semibold">
-                    Posted Succesfully!
-                  </div>
-                )}
-                {img ? (
-                  <img
-                    src={img ? URL.createObjectURL(img) : ""}
-                    alt=""
-                    className="w-96 h-96 ml-12 rounded-md mb-4 mt-0.5 cursor-pointer shadow-md "
-                  />
-                ) : (
-                  ""
-                )}
+          <div className="flex space-x-16 ml-[20rem]">
+            <div className=" flex  -ml-[22rem] flex-col bg-white w-64 h-[30rem] rounded-md shadow-md overflow-y-auto overflow-x-hidden scrollbar scrollbar-track-transparent scrollbar-thin scrollbar-thumb-gray-400 scrollbar-corner-neutral-800">
+              <div className="text-2xl font-semibold text-center pt-2 text-green mb-4">
+                Suggestions
               </div>
-              <div
-                onClick={postData}
-                className="text-white mt-4 bg-green shadow-lg p-1 w-28 rounded-md text-center mr-2 h-10  text-xl font-semibold  cursor-pointer"
-              >
-                Post
+              <Mutuals users={suggestions} />
+            </div>
+            <div className=" h-screen w-[30rem]  flex flex-col">
+              <div className="bg-white w-fill  rounded-md shadow-md flex flex-col justify-center  ">
+                <textarea
+                  onChange={(e) => setContent(e.target.value)}
+                  value={content}
+                  className="w-[29rem] h-20 mt-4
+              m-2 rounded-md shadow-md p-2  focus:border-none focus:outline-none resize-none"
+                  placeholder="What's on your mind?"
+                />
+                <div className="flex self-end">
+                  <div className="mt-4 flex flex-col">
+                    <label for="hiddenFileInput" className="ml-8">
+                      <img
+                        src={gallery}
+                        alt=""
+                        className="w-8 h-8 mr-4 mt-0.5 cursor-pointer shadow-xl"
+                      />
+                    </label>
+                    <input
+                      type="file"
+                      id="hiddenFileInput"
+                      onChange={(e) => setImg(e.target.files[0])}
+                      style={{ visibility: "hidden" }}
+                    />
+                    {imgError && (
+                      <div className="text-center text-red-700 text-md mb-8 ml-24">
+                        You must upload image before posting
+                      </div>
+                    )}
+                    {postUpdated && (
+                      <div className="text-center text-[#36953e] text-md mb-8 ml-24 font-semibold">
+                        Posted Succesfully!
+                      </div>
+                    )}
+                    {img ? (
+                      <img
+                        src={img ? URL.createObjectURL(img) : ""}
+                        alt=""
+                        className="w-96 h-96 ml-12 rounded-md mb-4 mt-0.5 cursor-pointer shadow-md "
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  <div
+                    onClick={postData}
+                    className="text-white mt-4 bg-green shadow-lg p-1 w-28 rounded-md text-center mr-2 h-10  text-xl font-semibold  cursor-pointer"
+                  >
+                    Post
+                  </div>
+                </div>
+              </div>
+              <div className=" w-fill  mt-8 text-black ">
+                {/*friends posts */}
+
+                <Posts posts={feedposts} />
+              </div>
+            </div>
+            <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden h-[30rem] ">
+              <div className="text-2xl font-semibold p-16 pt-2 text-green ">
+                All Friends
+              </div>
+              <div className="-mt-8 ml-8 mb-2 text-gray-400"></div>
+              <div className="flex flex-row">
+                <Mutuals users={friends} />
               </div>
             </div>
           </div>
-          <div className=" w-fill  mt-8 text-black ">
-            {/*friends posts */}
-
-            <Posts posts={feedposts} />
-          </div>
         </div>
-        <div className="bg-white shadow-md  mr-4 rounded-md flex flex-col overflow-x-hidden h-[30rem] ">
-          <div className="text-2xl font-semibold p-16 pt-2 text-green ">
-            All Friends
-          </div>
-          <div className="-mt-8 ml-8 mb-2 text-gray-400"></div>
-          <div className="flex flex-row">
-            <Mutuals users={friends} />
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

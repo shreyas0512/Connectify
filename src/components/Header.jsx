@@ -102,7 +102,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="flex flex-row w-min-screen  ml-16 min-w-screen ">
+    <div className="flex flex-row min-w-screen ml-8">
       <div
         className=" bg-green h-8 mt-8 rounded-md cursor-pointer hover:bg-[#128f29] text-center pt-1 font-bold text-white px-2"
         onClick={() => {

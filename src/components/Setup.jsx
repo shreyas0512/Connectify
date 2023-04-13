@@ -122,14 +122,14 @@ const Setup = () => {
       });
   };
   return (
-    <div className="h-screen w-screen bg-bgcolor flex flex-col bg-repeat-y overflow-scroll items-center">
-      <div className=" justify-center w-[63rem]">
-        <div className="text-4xl font-bold text-green self-start  mt-12">
-          Hi {name},<br /> Let's setup your account...
-        </div>
-        <div className="bg-white mt-8 w-12/12 h-[40rem] rounded-md shadow-md">
-          <div className="ml-48 ">
-            <div className="text-[#444444] text-3xl font-semibold pt-4">
+    <div className=" min-w-screen min-h-screen bg-bgcolor flex flex-col bg-repeat-y overflow-x-hidden overflow-y-scroll justify-center box-border m-0">
+      <div className=" flex flex-col  items-center justify-center mt-8   ">
+        <div className="w-screen justify-center flex flex-col items-center">
+          <div className="text-lg mt-8 sm:text-3xl font-bold text-green ">
+            Hi {name}, Let's setup your account...
+          </div>
+          <div className="bg-white mt-8 flex flex-col w-9/12  items-center justify-center rounded-md shadow-md">
+            <div className="text-[#444444] text-lg px-2 sm:text-2xl font-semibold pt-4 text-center">
               Share something about yourself...
             </div>
             <div className="text-[#444444] text-xl font-regular pt-4">
@@ -149,13 +149,13 @@ const Setup = () => {
               type="text"
               className="w-9/12 h-12 bg-[#f0f0f0] border-2 border-gray-200 p-2 rounded-md  focus:outline-none focus:border-green shadow-[inset_0px_4px_10px_-1px_rgba(169,169,169,0.1),inset_0px_-4px_4px_rgba(194,194,194,0.1)]"
             />
-            <div className="text-[#444444] text-3xl font-semibold pt-4 mt-[1.5rem]">
+            <div className="text-[#444444] text-lg sm:text-xl font-semibold pt-4 pb-4">
               Upload an Image of yourself!
             </div>
-            <div className="mt-8">
+            <div className="flex flex-col justify-center items-center">
               <label
                 htmlFor="asdsa"
-                className="cursor-pointer font-bold text-xl bg-green p-2 text-white rounded-md"
+                className="cursor-pointer font-bold text-lg sm:text-xl bg-green p-2 text-white rounded-md"
               >
                 Upload Image
               </label>
@@ -169,14 +169,16 @@ const Setup = () => {
               />
               {imgUploaded ? (
                 <div className="text-[#444444] text-xl font-regular pt-4">
-                  <div className="">
+                  <div className="flex justify-center -mt-2">
                     <img
                       src={file ? URL.createObjectURL(file) : ""}
                       alt="img"
-                      className="w-64 h-64 rounded-full ml-[30rem] -mt-[7rem] border-2 shadow-md"
+                      className=" w-24 h-24 rounded-full border-2 shadow-md"
                     />
                   </div>
-                  <div className="-mt-32">You can always change this later</div>
+                  <div className="text-sm sm:text-lg">
+                    You can always change this later
+                  </div>
                 </div>
               ) : (
                 ""
@@ -214,7 +216,7 @@ const Setup = () => {
         </div> */}
         <div
           onClick={handleSubmit}
-          className="bg-green p-2 mt-8 w-[17rem] ml-[23rem] pl-8 mb-8 rounded-md hover:bg-white hover:text-green hover:border-green border-2 cursor-pointer transition font-bold text-2xl text-white"
+          className="bg-green p-2 mt-8    mb-8 rounded-md hover:bg-white hover:text-green hover:border-green border-2 cursor-pointer transition font-bold text-lg sm:text-2xl text-white"
         >
           View your profile
         </div>

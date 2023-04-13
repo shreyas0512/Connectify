@@ -91,6 +91,7 @@ const Profile = () => {
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       setSelfData(docSnap.data());
+
       // console.log("Document data:", docSnap.data());
 
       setuserName(docSnap.data().name);
@@ -330,10 +331,11 @@ const Profile = () => {
           checkRequest={checkRequest}
           pending={pending}
           unfriend={unfriend}
+          checkReqlist={checkReqlist}
         />
       ) : (
         <div
-          className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
+          className="bg-bgcolor min-h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center"
           onClick={reqVisible}
         >
           <Header />
