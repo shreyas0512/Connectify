@@ -13,7 +13,7 @@ const Profilemob = (props) => {
   }, []);
 
   return (
-    <div className="bg-white h-screen w-screen flex flex-col items-center">
+    <div className="bg-white min-h-screen min-w-screen flex flex-col items-center m-0 overflow-auto">
       <MobileHeader
         selfData={props.selfData}
         acceptRequest={props.acceptRequest}
@@ -25,8 +25,8 @@ const Profilemob = (props) => {
             src={props.userdata.imgurl}
             className="rounded-full h-[100px] bg-gray-200 w-[100px] ml-6 -mt-8 shadow-sm object-cover"
           />
-          <div className="flex flex-col">
-            <div className="font-semibold text-md ml-8 mt-2 w-full">
+          <div className="flex flex-col justify-center items-start">
+            <div className="font-semibold text-md ml-8 mt-2 w-fill">
               {props.userdata.name}
             </div>
             {!props.isUser ? (
@@ -34,14 +34,14 @@ const Profilemob = (props) => {
                 !props.pending ? (
                   props.alreadyrec ? (
                     <div
-                      className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                      className="bg-green text-white rounded-sm text-sm py-0.5 ml-8 px-1 text-center  mt-2"
                       onClick={props.acceptRequest}
                     >
                       Accept
                     </div>
                   ) : (
                     <div
-                      className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                      className="bg-green text-white rounded-sm text-sm py-0.5 ml-8 px-1 text-center   mt-2"
                       onClick={props.addConnection}
                     >
                       + Connect
@@ -57,14 +57,14 @@ const Profilemob = (props) => {
                 )
               ) : (
                 <div
-                  className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2"
+                  className="bg-green text-white rounded-sm text-sm py-0.5 ml-8 px-2 w-fill  text-center mt-2"
                   onClick={props.unfriend}
                 >
                   Unfriend
                 </div>
               )
             ) : (
-              <div className="bg-green text-white rounded-md px-3 text-sm py-0.5 ml-8 w-28  mt-2">
+              <div className="bg-green text-white rounded-sm  text-sm py-0.5 ml-8 px-1 text-center  mt-2">
                 Edit Profile
               </div>
             )}
@@ -76,10 +76,9 @@ const Profilemob = (props) => {
               ""
             )}
           </div>
-          <div className="h-[1px] w-full bg-gray-300 mt-32 -ml-64 mr-2 rounded-sm"></div>
         </div>
         <div className="ml-2 font-medium">About</div>
-        <div className="ml-2 text-gray-500 text-xs mt-2 w-full px-2 m-2">
+        <div className="ml-2 text-gray-500 text-xs mt-2 w-full pr-1 m-2">
           {props.userdata.about}
         </div>
       </div>
@@ -97,7 +96,7 @@ const Profilemob = (props) => {
       </div>
       <div className="bg-[#FFFFFF] w-11/12 mt-4 -ml-2 rounded-md shadow-md p-2 flex flex-col">
         {props.isUser ? <div>Friends</div> : <div>Mutuals</div>}
-        <div className="flex flex-wrap mt-12 gap-y-8">
+        <div className="flex flex-wrap mt-12 gap-y-12">
           {mutualusers.map((user) => {
             return (
               <div className="flex flex-col items-center">

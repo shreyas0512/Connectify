@@ -146,7 +146,7 @@ const MobileHeader = (props) => {
           userid={userid}
         />
       )}
-      <div className="flex w-screen">
+      <div className="flex w-screen justify-between">
         <input
           type="text"
           placeholder="Search"
@@ -157,12 +157,12 @@ const MobileHeader = (props) => {
           }}
           onKeyDown={handleKeyDown}
         />
-        <div className="flex mt-5 space-x-5">
+        <div className="flex mt-5 space-x-4 mr-4">
           <div>
             <img
               src={addfriendmobile}
               alt="asd"
-              className=" h-4 w-4  "
+              className="   h-4 w-4  "
               onClick={() => {
                 fetchRequests();
                 getSuggestions();
@@ -175,7 +175,7 @@ const MobileHeader = (props) => {
           <img
             src={home}
             alt="asd"
-            className=" h-5 w-5  "
+            className=" h-4 w-4  "
             onClick={() => {
               navigate("/feed");
             }}
@@ -183,7 +183,7 @@ const MobileHeader = (props) => {
           <img
             src={logoutimg}
             alt="asd"
-            className=" h-5 w-5  "
+            className=" h-4 w-4  "
             onClick={() => {
               auth.signOut();
               navigate("/");
@@ -193,7 +193,7 @@ const MobileHeader = (props) => {
             <img
               src={props.selfData.imgurl}
               alt="asd"
-              className=" h-6 w-6  rounded-full"
+              className=" h-5 w-5  rounded-full"
               onClick={() => {
                 navigate(`/profile/${props.selfData.uid}`);
               }}
