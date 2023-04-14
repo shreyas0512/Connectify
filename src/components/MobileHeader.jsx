@@ -28,7 +28,7 @@ const MobileHeader = (props) => {
   const [searcher, setSearcher] = useState("");
   const [searchresults, setSearchresults] = useState([]);
   const [focus, setFocus] = useState(false);
-  const searchRef = useRef();
+  const searchRef = useRef(null);
   const { requ, setRequ, setSuggestions, suggestions } =
     useContext(ProfileContext);
 
@@ -147,59 +147,112 @@ const MobileHeader = (props) => {
         />
       )}
       <div className="flex w-screen justify-between">
-        <input
-          type="text"
-          placeholder="Search"
-          className="w-2/4 p-1 px-2 rounded-md shadow-md m-4  text-xs focus:outline-none "
-          value={searcher}
-          onChange={(e) => {
-            setSearcher(e.target.value);
-          }}
-          onKeyDown={handleKeyDown}
-        />
-        <div className="flex mt-5 space-x-4 mr-4">
-          <div>
-            <img
-              src={addfriendmobile}
-              alt="asd"
-              className="   h-4 w-4  "
-              onClick={() => {
-                fetchRequests();
-                getSuggestions();
+        <div className="w-fill">
+          <input
+            type="text"
+            placeholder="Search"
+            className="w-[40vw] p-1 px-2 rounded-md shadow-md mt-4 outline-none  text-xs focus:outline-none focus:w-[91vw]  ml-4 mr-2 transition-width duration-200 ease-in-out  "
+            value={searcher}
+            onFocus={() => {
+              setFocus(true);
+            }}
+            onBlur={() => {
+              setFocus(false);
+            }}
+            onChange={(e) => {
+              setSearcher(e.target.value);
+            }}
+            onKeyDown={handleKeyDown}
+          />
 
-                setOpenrequests(true);
-                console.log(openrequests);
-              }}
-            />
-          </div>
-          <img
-            src={home}
-            alt="asd"
-            className=" h-4 w-4  "
-            onClick={() => {
-              navigate("/feed");
-            }}
-          />
-          <img
-            src={logoutimg}
-            alt="asd"
-            className=" h-4 w-4  "
-            onClick={() => {
-              auth.signOut();
-              navigate("/");
-            }}
-          />
-          <div className="">
-            <img
-              src={props.selfData.imgurl}
-              alt="asd"
-              className=" h-5 w-5  rounded-full"
-              onClick={() => {
-                navigate(`/profile/${props.selfData.uid}`);
-              }}
-            />
-          </div>
+          {searchresults.length > 0 && focus && (
+            <div
+              id="abcdef"
+              className="absolute z-10 bg-white w-[91vw] rounded-md h-screen overflow-auto shadow-md m-4"
+              ref={searchRef}
+            >
+              {searchresults.map((result) => {
+                console.log("result is", result);
+                return (
+                  <div
+                    key={result.id}
+                    className="flex items-center p-2  h-12  w-fill cursor-pointer"
+                    onMouseDown={() => {
+                      const path = `/profile/${result.uid}`;
+                      console.log(path, "path");
+                      setFocus(false);
+                      setSearcher(result.name);
+                      navigate(path);
+                    }}
+                  >
+                    <img
+                      src={result.imgurl}
+                      alt="asd"
+                      className="h-6 w-6 rounded-full"
+                    />
+                    <p
+                      className="ml-2"
+                      onClick={() => {
+                        const path = `/profile/${result.uid}`;
+                        console.log(path, "path");
+                        setFocus(false);
+
+                        navigate(path);
+                      }}
+                    >
+                      {result.name}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
+        {!focus && (
+          <div className="flex mt-5 space-x-4 mr-4">
+            <div>
+              <img
+                src={addfriendmobile}
+                alt="asd"
+                className="   h-4 w-4  "
+                onClick={() => {
+                  fetchRequests();
+                  getSuggestions();
+
+                  setOpenrequests(true);
+                  console.log(openrequests);
+                }}
+              />
+            </div>
+            <img
+              src={home}
+              alt="asd"
+              className=" h-4 w-4  "
+              onClick={() => {
+                navigate("/feed");
+              }}
+            />
+            <img
+              src={logoutimg}
+              alt="asd"
+              className=" h-4 w-4  "
+              onClick={() => {
+                auth.signOut();
+                navigate("/");
+              }}
+            />
+            <div className="">
+              <img
+                src={props.selfData.imgurl}
+                alt="asd"
+                className=" h-5 w-5  rounded-full"
+                onClick={() => {
+                  navigate(`/profile/${props.selfData.uid}`);
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

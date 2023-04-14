@@ -44,7 +44,7 @@ const MobileFeed = (props) => {
   return (
     <div className="bg-bgcolor min-h-screen   flex flex-col  items-center overflow-auto box-border ">
       <MobileHeader selfData={selfData} />
-      <div className="  flex flex-col items-center w-screen">
+      <div className="  flex flex-col items-center w-screen mt-9">
         <div className="bg-white rounded-md shadow-md flex flex-col items-center box-border w-11/12 ">
           <textarea
             onChange={(e) => props.setContent(e.target.value)}

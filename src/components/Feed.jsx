@@ -85,12 +85,11 @@ const Feed = () => {
 
   //function to update the post object to the document of the user by uploading image first
   const postData = async () => {
+    setPostUpdated("x");
     setImgError(false);
     if (img == null) {
       setImgError(true);
     }
-
-    setPostUpdated(false);
 
     const storage = getStorage();
     const storageRef = ref(storage, "postimages/" + img.name);
@@ -117,8 +116,8 @@ const Feed = () => {
         setImg(null);
         setContent("");
         //to update or refresh page after post
-        setPostUpdated(true);
-        if (postUpdated) {
+        setPostUpdated("y");
+        if (postUpdated == "y") {
           setContent("");
 
           //after a timeout of 2 second, set postUpdated to false
@@ -219,19 +218,20 @@ const Feed = () => {
   return (
     <>
       {isTabletOrMobile ? (
-        <MobileFeed userid={userid} postData={postData}
-        img={img}
-        setImg={setImg}
-        content={content}
-        setContent={setContent}
-        imgError={imgError}
-        setImgError={setImgError}
-        feedposts={feedposts}
-        suggestions={suggestions}
-        friends={friends}
-        setFriends={setFriends}
-        postUpdated={postUpdated}
-
+        <MobileFeed
+          userid={userid}
+          postData={postData}
+          img={img}
+          setImg={setImg}
+          content={content}
+          setContent={setContent}
+          imgError={imgError}
+          setImgError={setImgError}
+          feedposts={feedposts}
+          suggestions={suggestions}
+          friends={friends}
+          setFriends={setFriends}
+          postUpdated={postUpdated}
         />
       ) : (
         <div className="bg-bgcolor h-screen bg-cover bg-no-repeat w-screen fixed overflow-x-auto flex flex-col items-center">
@@ -274,20 +274,32 @@ const Feed = () => {
                         You must upload image before posting
                       </div>
                     )}
-                    {postUpdated && (
+                    {postUpdated == "x" && (
+                      <div className="self-center ml-16 -mt-2">
+                        <div
+                          class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                          role="status"
+                        >
+                          <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                            Loading...
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    {postUpdated == "y" && (
                       <div className="text-center text-[#36953e] text-md mb-8 ml-24 font-semibold">
                         Posted Succesfully!
                       </div>
                     )}
-                    {img ? (
-                      <img
-                        src={img ? URL.createObjectURL(img) : ""}
-                        alt=""
-                        className="w-96 h-96 ml-12 rounded-md mb-4 mt-0.5 cursor-pointer shadow-md "
-                      />
-                    ) : (
-                      ""
-                    )}
+                    {img
+                      ? postUpdated != "x" && (
+                          <img
+                            src={img ? URL.createObjectURL(img) : ""}
+                            alt=""
+                            className="w-96 h-96 ml-12 rounded-md mb-4 mt-0.5 cursor-pointer shadow-md "
+                          />
+                        )
+                      : ""}
                   </div>
                   <div
                     onClick={postData}

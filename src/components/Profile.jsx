@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Mutuals from "./Mutuals";
 import Requests from "./Requests";
-import Skeleton from "react-loading-skeleton";
+
 import "react-loading-skeleton/dist/skeleton.css";
 import { ProfileContext } from "../Contexts/ProfileContext";
 import { useContext } from "react";
 import homeLogo from "../assets/home.png";
 import { useMediaQuery } from "react-responsive";
 import Profilemob from "./Profilemob";
+import Skeleton from "react-loading-skeleton";
 
 import {
   doc,
@@ -104,6 +105,11 @@ const Profile = () => {
   //function to get profile pic and name of account being viewed
 
   async function getPic() {
+    setName("x");
+    setProfpic("x");
+    setAbout("x");
+    setInterests("x");
+    setMutualcount("x");
     const picRef = doc(db, "users", uid);
     const docSnap = await getDoc(picRef);
     if (docSnap.exists()) {
@@ -263,7 +269,7 @@ const Profile = () => {
     const profriends = profSnap.data().friends;
     const mutual = userfriends.filter((uid) => profriends.includes(uid));
     console.log("mutuals is calle1212");
-
+    console.log(mutual.length);
     setMutualcount(mutual.length);
 
     const q = query(collection(db, "users"), where("uid", "in", mutual));
@@ -344,15 +350,31 @@ const Profile = () => {
             <div className="flex flex-col">
               <div className="bg-white p-12 m-4 mt-16 shadow-md rounded-lg flex flex-col w-[52rem]">
                 <div className="flex">
-                  <img
-                    src={profpic}
-                    alt=""
-                    className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
-                  />
-                  <div className="flex flex-col ml-8">
-                    <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
-                      {name}
+                  {profpic != "x" ? (
+                    <img
+                      src={profpic}
+                      alt=""
+                      className="h-52 w-52 rounded-full -mt-36 shadow-md -ml-8"
+                    />
+                  ) : (
+                    <div className="-mt-32">
+                      <Skeleton
+                        width={200}
+                        height={200}
+                        circle={true}
+                        className="-mt-36 shadow-md -ml-8"
+                      />
                     </div>
+                  )}
+
+                  <div className="flex flex-col ml-8">
+                    {name != "x" ? (
+                      <div className="text-4xl font-[600] text-[#444444] -mt-6 ">
+                        {name}
+                      </div>
+                    ) : (
+                      <Skeleton width={200} height={30} />
+                    )}
                     {isUser ? (
                       <div className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer">
                         Edit Profile
@@ -378,47 +400,79 @@ const Profile = () => {
                       >
                         Accept Request
                       </div>
-                    ) : (
+                    ) : profpic != "x" ? (
                       <div
                         className="bg-green w-[11rem] mt-6 rounded-md text-2xl font-regular p-2 text-white shadow-md cursor-pointer"
                         onClick={addConnection}
                       >
                         + Connect
                       </div>
+                    ) : (
+                      <Skeleton width={200} height={30} />
                     )}
                   </div>
                 </div>
-                <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
+                {profpic != "x" ? (
+                  <div className="h-[2.5px] w-[50rem] bg-[#DBDADA] mt-4 -ml-8 "></div>
+                ) : (
+                  ""
+                )}
                 {isUser ? (
                   ""
                 ) : (
                   <div className="text-xl text-[#929191] -ml-8">
-                    {mutualcount} Mutual Friends
+                    {mutualcount === "x" ? (
+                      <div className="mt-2">
+                        <Skeleton count={1} baseColor="#f2f2f2" width={200} />
+                      </div>
+                    ) : (
+                      <h1> {mutualcount} Mutual Friends</h1>
+                    )}
                   </div>
                 )}
-                <div className="-ml-8 text-2xl font-medium mt-2">About</div>
-                <div className="-ml-8 text-lg font-light text-gray-700 w-fill">
-                  {about}
+                <div className="-ml-8">
+                  {about != "x" ? (
+                    <div className=" text-2xl font-medium mt-2">About</div>
+                  ) : (
+                    <Skeleton count={1} baseColor="#f2f2f2" width={200} />
+                  )}
+                  {about != "x" ? (
+                    <div className=" text-lg font-light text-gray-700 w-fill">
+                      {about}
+                    </div>
+                  ) : (
+                    <Skeleton count={1} width={600} height={30} />
+                  )}
                 </div>
               </div>
               <div className=" p-4 bg-white w-[52rem] m-4 shadow-md rounded-lg  ">
-                <div className="text-2xl font-medium">Interests</div>
-                <div className="flex flex-row mt-4">
-                  {inter.map((item) => {
-                    return (
-                      <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
-                        {item}
-                      </div>
-                    );
-                  })}
-                </div>
+                {interests != "x" ? (
+                  <div className="text-2xl font-medium">Interests</div>
+                ) : (
+                  <Skeleton count={1} baseColor="#f2f2f2" width={200} />
+                )}
+                {interests != "x" ? (
+                  <div className="flex flex-row mt-4">
+                    {inter.map((item) => {
+                      return (
+                        <div className="bg-[#F2F2F2] rounded-md text-[#929191] font-medium text-sm px-4 py-2 mr-4">
+                          {item}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <Skeleton count={1} baseColor="#f2f2f2" width={200} />
+                )}
               </div>
             </div>
             {isUser ? (
               <div className="bg-white shadow-md mt-16 mr-4 rounded-md flex flex-col overflow-x-hidden">
-                <div className="text-3xl font-semibold p-16 pt-2 text-green ">
-                  All Friends
-                </div>
+                {
+                  <div className="text-3xl font-semibold p-16 pt-2 text-green ">
+                    All Friends
+                  </div>
+                }
                 <div className="-mt-8 ml-8 mb-2 text-gray-400">
                   {mutualcount} Friends
                 </div>
@@ -431,7 +485,9 @@ const Profile = () => {
                 <div className="text-3xl font-semibold p-16 pt-2 text-green ">
                   Mutuals
                 </div>
-                <Mutuals users={mutualusers} />
+                {<Mutuals users={mutualusers} /> || (
+                  <Skeleton baseColor="#FF0000" />
+                )}
               </div>
             )}
           </div>

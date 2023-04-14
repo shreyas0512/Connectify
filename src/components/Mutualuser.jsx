@@ -20,7 +20,7 @@ const Mutualuser = (props) => {
         <div className="flex flex-col ml-4">
           <div
             onClick={gotoProfile}
-            className="text-xl font-bold text-green cursor-pointer hover:text-[#498e43]"
+            className="text-md font-bold text-green cursor-pointer self-end hover:text-[#498e43]"
           >
             {props.users.name}
           </div>

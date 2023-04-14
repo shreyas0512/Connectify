@@ -13,7 +13,7 @@ const Mutuals = (props) => {
       <div>
         {props.users.map((user) => {
           return (
-            <div>
+            <div className="w-fill">
               <Mutualuser users={user} />
               <div className="bg-gray-200 h-[2px] m-3 -mt-1 shadow-md w-[15rem]"></div>
             </div>

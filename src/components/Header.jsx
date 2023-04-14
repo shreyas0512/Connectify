@@ -11,7 +11,8 @@ import { doc, getDoc } from "firebase/firestore";
 import logout from "../assets/logout.png";
 import Requests from "./Requests";
 import homeIcon from "../assets/home.png";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 const Header = () => {
   const [userid, setUserid] = useState("");
   const [searcher, setSearcher] = useState("");
@@ -102,26 +103,38 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="flex flex-row min-w-screen ml-8">
-      <div
-        className=" bg-green h-8 mt-8 rounded-md cursor-pointer hover:bg-[#128f29] text-center pt-1 font-bold text-white px-2"
-        onClick={() => {
-          navigate("/feed");
-        }}
-      >
-        Feed
-      </div>
-      <div className=" relative">
-        <input
-          onFocus={() => setFocus(true)}
-          className="w-96 h-12 rounded-md bg-white shadow-md m-6  font-medium pl-2 focus:outline-none resize-none"
-          placeholder="Search for Users"
-          value={searcher}
-          onChange={(e) => {
-            setSearcher(e.target.value);
+    <div className="flex flex-row min-w-screen ml-8 mt-8">
+      {userprofpic ? (
+        <div
+          className=" bg-green h-8 rounded-md cursor-pointer hover:bg-[#128f29] text-center pt-1 font-bold text-white px-2"
+          onClick={() => {
+            navigate("/feed");
           }}
-          onKeyDown={handleKeyDown}
-        />
+        >
+          Feed
+        </div>
+      ) : (
+        <div>
+          <Skeleton width={50} height={30} />
+        </div>
+      )}
+      <div className=" relative">
+        {userprofpic ? (
+          <input
+            onFocus={() => setFocus(true)}
+            className="w-96 h-12 rounded-md bg-white shadow-md m-6 mt-0 font-medium pl-2 focus:outline-none resize-none"
+            placeholder="Search for Users"
+            value={searcher}
+            onChange={(e) => {
+              setSearcher(e.target.value);
+            }}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          <div className="mr-48 ml-8 mb-16">
+            <Skeleton width={450} height={40} />
+          </div>
+        )}
         {focus && (
           <div
             ref={searchRef}
@@ -131,7 +144,6 @@ const Header = () => {
               ? searchresults.map((result) => (
                   <div className="flex flex-row items-center">
                     <div
-                      key={result.id}
                       className="font-medium mt-1 w-fill cursor-pointer  hover:text-green"
                       onClick={() => {
                         setSearcher(result.name);
@@ -149,42 +161,52 @@ const Header = () => {
           </div>
         )}
       </div>
-      <div className="h-[10rem] ">
-        {" "}
-        {/*might need onclick to fix*/}
-        <Requests currentuser={userid} />
-      </div>
-      <div className="flex mt-6 ml-[4rem]">
-        <div
-          onClick={gotoprof}
-          className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer"
-        >
-          <img
-            src={userprofpic}
-            alt="a"
-            className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer"
-          />
-          {userName}
+      {userprofpic ? (
+        <div className="h-[10rem] -mt-6 ">
+          {" "}
+          {/*might need onclick to fix*/}
+          <Requests currentuser={userid} />
         </div>
+      ) : (
+        <Skeleton width={250} height={40} />
+      )}
+      {userprofpic ? (
+        <div className="flex mt-0 ml-[4rem]">
+          <div
+            onClick={gotoprof}
+            className="bg-green pr-2 h-12  mr-8 rounded-md font-bold text-white pt-3 pl-16 text-sm flex cursor-pointer"
+          >
+            <img
+              src={userprofpic}
+              alt="a"
+              className="h-10 w-10 -ml-14 rounded-sm -mt-[8px] mr-3 cursor-pointer "
+            />
+            {userName}
+          </div>
 
-        <img
-          src={logout}
-          className="h-8 w-8 mt-2 mr-2 cursor-pointer"
-          onClick={() => {
-            signOut(auth)
-              .then(() => {
-                console.log("signed out");
+          <img
+            src={logout}
+            className="h-8 w-8 mt-2 mr-2 cursor-pointer"
+            onClick={() => {
+              signOut(auth)
+                .then(() => {
+                  console.log("signed out");
 
-                navigate("/");
+                  navigate("/");
 
-                // Sign-out successful.
-              })
-              .catch((error) => {
-                // An error happened.
-              });
-          }}
-        />
-      </div>
+                  // Sign-out successful.
+                })
+                .catch((error) => {
+                  // An error happened.
+                });
+            }}
+          />
+        </div>
+      ) : (
+        <div className="ml-16">
+          <Skeleton width={150} height={40} />
+        </div>
+      )}
     </div>
   );
 };
